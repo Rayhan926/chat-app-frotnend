@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .__px {
+    @apply px-6;
+  }
+  .float_btn_shadow {
+    box-shadow: 0 0 20px theme(colors.primary / 30%);
+  }
+}
+
+body {
+  @apply bg-soft-gray;
+}

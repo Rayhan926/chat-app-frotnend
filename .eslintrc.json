@@ -1,3 +1,12 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "airbnb-base"],
+  "rules": {
+    "import/export": 0,
+    "import/extensions": 0,
+    "no-restricted-exports": 0,
+    "import/prefer-default-export": 0,
+    "operator-linebreak": 0,
+    "arrow-body-style": 0,
+    "comma-dangle": 0
+  }
 }
