@@ -3,7 +3,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import Image from 'next/image';
 
 const LoginScreen = () => {
-  const { session, googleLogin } = useSession();
+  const { googleLogin } = useSession();
 
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {

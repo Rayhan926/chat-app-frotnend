@@ -14,3 +14,24 @@
 body {
   @apply bg-soft-gray;
 }
+
+.animate_slide_up {
+  animation: animate_slide_up 150ms ease-in;
+}
+
+.animate_slide_down {
+  transform: translateY(-15px);
+  opacity: 0;
+  transition: 150ms;
+}
+
+@keyframes animate_slide_up {
+  from {
+    transform: translateY(-15px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 100;
+  }
+}

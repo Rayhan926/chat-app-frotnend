@@ -26,7 +26,11 @@
       "@utils": ["./src/utils"],
       "@utils/*": ["./src/utils/*"],
       "@client": ["./src/client"],
-      "@client/*": ["./src/client/*"]
+      "@client/*": ["./src/client/*"],
+      "@states": ["./src/states"],
+      "@states/*": ["./src/states/*"],
+      "@lib": ["./src/lib"],
+      "@lib/*": ["./src/lib/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

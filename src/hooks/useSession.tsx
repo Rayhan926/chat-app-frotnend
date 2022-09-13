@@ -1,52 +1,99 @@
 /* eslint-disable no-trailing-spaces */
 import client from '@client';
-import { AuthContentValue, AuthProviderProps, Login } from '@types';
-
+import { getLocal, removeBoth, setLocal } from '@lib/localstorage';
+import { AuthContenxtValue, AuthProviderProps, AuthUser, Login } from '@types';
+import { cookies } from '@utils';
+import { useRouter } from 'next/router';
 import {
-  createContext, useCallback, useContext, useMemo, useState
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
 } from 'react';
-import { useLocalStorage } from 'react-use';
-import Cookies from 'universal-cookie';
 
-const cookies = new Cookies();
-
-const AuthContext = createContext<AuthContentValue>({
+const AuthContext = createContext<AuthContenxtValue>({
   session: null,
-  googleLogin: () => {} 
+  googleLogin: () => {},
+  logout: () => {},
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [value, setValue] = useLocalStorage('user');
-  
+  // hooks
+  const router = useRouter();
+
+  // state
+  const [localUser, setLocalUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  // console.log({ value, accessToken });
-
-  const login = useCallback(({ token, user }:Login) => { 
-    cookies.set('token', token, { path: '/' });
-    setAccessToken(token);
-    setValue(user);
-  }, [setValue]);
-
-  const googleLogin = useCallback((tokenId:string) => {
-    client.post('/google-login', {
-      tokenId: `Bearer ${tokenId}`
-    }).then(({ data: { data } }) => {
-      login({
-        token: data.token,
-        user: data.user
+  // Fetching user info if it's not in local storage but has the access token in cookie
+  useEffect(() => {
+    if (!localUser) {
+      client.get('/auth/get-user').then(({ data: { data } }) => {
+        setLocalUser(data);
+        setLocal('user', data);
       });
-    });
-  }, [login]);
-
-  const contextValue = useMemo(() => {
-    return {
-      session: null,
-      googleLogin,
-    };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+  // Setting access token to state after page mounted
+  useEffect(() => {
+    setAccessToken(cookies.get('token'));
+    setLocalUser(getLocal('user'));
+  }, []);
+
+  // Login
+  const login = useCallback(
+    ({ token, user }: Login) => {
+      cookies.set('token', token, { path: '/' });
+      setAccessToken(token);
+      setLocalUser(user);
+      router.push('/');
+    },
+    [router],
+  );
+
+  // Logout
+  const logout = useCallback(() => {
+    cookies.remove('token');
+    setAccessToken(null);
+    router.push('/login').then(() => removeBoth('user'));
+  }, [router]);
+
+  // Google Login
+  const googleLogin = useCallback(
+    (tokenId: string) => {
+      client
+        .post('/auth/google-login', {
+          tokenId: `Bearer ${tokenId}`,
+        })
+        .then(({ data: { data } }) => {
+          login({
+            token: data.token,
+            user: data.user,
+          });
+        });
+    },
+    [login],
+  );
+
+  // Context value with useMemo
+  const contextValue = useMemo<AuthContenxtValue>(() => {
+    return {
+      session: {
+        user: localUser,
+        token: accessToken,
+      },
+      googleLogin,
+      logout,
+    };
+  }, [localUser, accessToken, googleLogin, logout]);
+
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
 };
 
 const useSession = () => useContext(AuthContext);
