@@ -3,6 +3,8 @@ import ToastShower from '@components/ToastShower';
 import { AuthProvider } from '@hooks/useSession';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import type { AppProps } from 'next/app';
+import { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import '../styles/globals.css';
 
@@ -20,10 +22,16 @@ function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
         <AuthProvider>
-          <ChatBodyWrapper>
-            <Component {...pageProps} />
-            <ToastShower />
-          </ChatBodyWrapper>
+          <SkeletonTheme
+            baseColor="#ddd"
+            highlightColor="#f1f1fe"
+            borderRadius={2}
+          >
+            <ChatBodyWrapper>
+              <Component {...pageProps} />
+              <ToastShower />
+            </ChatBodyWrapper>
+          </SkeletonTheme>
         </AuthProvider>
       </GoogleOAuthProvider>
     </QueryClientProvider>

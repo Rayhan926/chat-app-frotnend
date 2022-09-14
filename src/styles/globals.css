@@ -35,3 +35,8 @@ body {
     opacity: 100;
   }
 }
+
+span[aria-live='polite'] {
+  display: inherit;
+  line-height: 0;
+}

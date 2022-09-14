@@ -27,10 +27,12 @@
       "@utils/*": ["./src/utils/*"],
       "@client": ["./src/client"],
       "@client/*": ["./src/client/*"],
-      "@states": ["./src/states"],
-      "@states/*": ["./src/states/*"],
+      "@atoms": ["./src/atoms"],
+      "@atoms/*": ["./src/atoms/*"],
       "@lib": ["./src/lib"],
-      "@lib/*": ["./src/lib/*"]
+      "@lib/*": ["./src/lib/*"],
+      "@skelentons": ["./src/skelentons"],
+      "@skelentons/*": ["./src/skelentons/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

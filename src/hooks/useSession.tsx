@@ -12,6 +12,8 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { useQueryClient } from 'react-query';
+import useConversations from './useConversations';
 
 const AuthContext = createContext<AuthContenxtValue>({
   session: null,
@@ -21,11 +23,20 @@ const AuthContext = createContext<AuthContenxtValue>({
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   // hooks
+  const queryClient = useQueryClient();
+  const { refetch } = useConversations();
   const router = useRouter();
 
   // state
   const [localUser, setLocalUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  // loading conversation on every page load
+
+  useEffect(() => {
+    if (!accessToken) return;
+    refetch();
+  }, [refetch, accessToken]);
 
   // Fetching user info if it's not in local storage but has the access token in cookie
   useEffect(() => {
@@ -59,8 +70,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = useCallback(() => {
     cookies.remove('token');
     setAccessToken(null);
+    queryClient.invalidateQueries();
     router.push('/login').then(() => removeBoth('user'));
-  }, [router]);
+  }, [router, queryClient]);
 
   // Google Login
   const googleLogin = useCallback(

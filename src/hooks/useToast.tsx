@@ -1,13 +1,8 @@
-import { ToastAtomType, ToastType } from '@types';
-import { atom, useAtom } from 'jotai';
+import { toastAtom } from '@atoms';
+import { ToastType } from '@types';
+import { useAtom } from 'jotai';
 
-const sendFriendRequesDrawerAtom = atom(false);
-export const useOpenFriendRequestDrawer = () =>
-  useAtom(sendFriendRequesDrawerAtom);
-
-const toastAtom = atom<ToastAtomType[]>([]);
-
-export const useToast = () => {
+const useToast = () => {
   const [toasts, _setToast] = useAtom(toastAtom);
 
   const setToast = (newToast: ToastType) => {
@@ -30,3 +25,5 @@ export const useToast = () => {
     setToast,
   };
 };
+
+export default useToast;

@@ -1,21 +1,21 @@
-import { getConversations } from '@client/queries';
 import AddFriendFloatButton from '@components/AddFriendFloatButton';
-import ChatBox from '@components/ChatBox';
+import SingleConversation from '@components/SingleConversation';
+import useConversations from '@hooks/useConversations';
+import ConversationSkelenton from '@skelentons/ConversationSkelenton';
+import { Conversation } from '@types';
 import Header from '@views/HomeScreen/components/Header';
-import { useQuery } from 'react-query';
 
 const HomeScreen = () => {
-  const { data, isLoading } = useQuery('get-conversations', getConversations);
-  console.log(data);
+  const { isIdle, isLoading, conversations } = useConversations();
   return (
     <div className="h-full flex flex-col relative">
       <Header />
       <div className="grow overflow-y-auto scrollbar-none py-2.5">
-        {isLoading
-          ? 'Loading..'
-          : data &&
-            (data as any).map((e: any, i: number) => (
-              <ChatBox {...e} key={i} />
+        {isIdle || isLoading
+          ? [...Array(10).keys()].map((e) => <ConversationSkelenton key={e} />)
+          : conversations &&
+            (conversations as any).map((conversation: Conversation) => (
+              <SingleConversation {...conversation} key={conversation._id} />
             ))}
       </div>
       <AddFriendFloatButton />

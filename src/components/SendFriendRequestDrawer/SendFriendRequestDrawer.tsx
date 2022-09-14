@@ -1,6 +1,7 @@
+import { useOpenFriendRequestDrawer } from '@atoms';
 import { sendFriendRequest } from '@client/mutations';
 import Drawer from '@components/Drawer';
-import { useOpenFriendRequestDrawer, useToast } from '@states';
+import useToast from '@hooks/useToast';
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 

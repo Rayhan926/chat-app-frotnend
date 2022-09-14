@@ -8,12 +8,12 @@ const UserAvatar = () => {
 
   return (
     <div className="flex items-center gap-2">
-      <div>
+      {/* <div>
         <p>
           {user?.username || ''} {user?.name}
         </p>
         <p>{user?._id}</p>
-      </div>
+      </div> */}
       <div
         className="w-10 h-10 rounded-full bg-dark-100 relative overflow-hidden cursor-pointer"
         onClick={logout}

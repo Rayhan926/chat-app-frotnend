@@ -1,6 +1,6 @@
 import ChatBodyPortal from '@components/ChatBodyPortal';
 import Toast from '@components/Toast';
-import { useToast } from '@states';
+import useToast from '@hooks/useToast';
 
 const ToastShower = () => {
   const { toasts } = useToast();

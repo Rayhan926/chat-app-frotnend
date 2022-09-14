@@ -1,9 +1,5 @@
 import { ReactNode } from 'react';
 
-export type MessageType = {
-  isMe: boolean;
-};
-
 export type AuthProviderProps = {
   children?: ReactNode;
 };
@@ -42,4 +38,32 @@ export type ToastType = {
 };
 export type ToastAtomType = ToastType & {
   toastId: string;
+};
+
+export type ChatBoxProps = {
+  _id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  username: string;
+  status: 'online' | 'offline';
+};
+
+export type Chat = {
+  _id: string;
+  senderId: string;
+  receiverId: string;
+  message: string;
+  status: 'sent' | 'delivered' | 'seen';
+  createdAt: Date;
+};
+
+export type Conversation = ChatBoxProps & {
+  lastMessage: Chat | null;
+  unseenMessageCount: number;
+};
+
+export type SendMessageType = {
+  message: string;
+  sendTo: string;
 };

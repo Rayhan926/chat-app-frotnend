@@ -1,5 +1,7 @@
 import HomeScreen from '@views/HomeScreen';
 
-const Home = () => <HomeScreen/>;
+const Home = () => {
+  return <HomeScreen />;
+};
 
 export default Home;
