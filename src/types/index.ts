@@ -67,3 +67,9 @@ export type SendMessageType = {
   message: string;
   sendTo: string;
 };
+
+export type TabButtonProps = {
+  icon: ReactNode;
+  activeIcon: ReactNode;
+  path: string;
+};

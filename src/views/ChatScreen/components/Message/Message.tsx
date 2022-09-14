@@ -10,8 +10,10 @@ const Message = ({ message, senderId }: Chat) => {
     <div>
       <div
         className={cx(
-          'max-w-[75%] w-fit p-2 px-4 rounded-[20px]',
-          isMe ? 'bg-primary text-white ml-auto' : 'bg-dark-100 text-dark-900',
+          'max-w-[75%] w-fit p-2 px-4 rounded-[20px] text-sm',
+          isMe
+            ? 'bg-primary text-white ml-auto __its_me'
+            : 'bg-dark-100 text-dark-900 __its_not_me',
         )}
       >
         {message}

@@ -40,3 +40,14 @@ span[aria-live='polite'] {
   display: inherit;
   line-height: 0;
 }
+
+/* .__its_me:first-child {
+  border-bottom-right-radius: 0px;
+}
+.__its_me:last-child {
+  border-top-right-radius: 0px;
+} */
+.__its_me + .__its_me {
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
+}

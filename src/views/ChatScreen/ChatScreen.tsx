@@ -9,7 +9,7 @@ const ChatScreen = () => {
   return (
     <div className="h-full flex flex-col">
       <Header />
-      <div className="__px grow space-y-3 overflow-y-auto py-4 pb-2 scrollbar-none">
+      <div className="__px grow space-y-1 overflow-y-auto py-4 pb-2 scrollbar-none">
         {chats.map((chat) => (
           <Message {...chat} key={chat._id} />
         ))}

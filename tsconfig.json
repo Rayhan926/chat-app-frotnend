@@ -32,7 +32,9 @@
       "@lib": ["./src/lib"],
       "@lib/*": ["./src/lib/*"],
       "@skelentons": ["./src/skelentons"],
-      "@skelentons/*": ["./src/skelentons/*"]
+      "@skelentons/*": ["./src/skelentons/*"],
+      "@layouts": ["./src/layouts"],
+      "@layouts/*": ["./src/layouts/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

@@ -69,7 +69,7 @@ const SingleConversation = ({
           {unseenMessageCount > 0 && (
             <div
               className={cx(
-                'min-w-[20px] h-5 rounded-[10px] bg-primary flex justify-center items-center text-white text-xs font-light',
+                'min-w-[20px] h-5 rounded-[10px] bg-primary flex justify-center items-center text-white text-[11px] font-light',
                 unseenMessageCount.toString().length >= 3
                   ? 'px-1.5'
                   : 'px-[4px]',
