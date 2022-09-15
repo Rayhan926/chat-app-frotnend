@@ -2,7 +2,10 @@ import client from '@client';
 import { SendMessageType } from '@types';
 
 export const sendFriendRequest = (sendTo: string) =>
-  client.post('/user/send-friend-request', { sendTo });
+  client.post('/user/friend-request', { sendTo });
 
 export const sendMessage = (sendMessageOptions: SendMessageType) =>
-  client.post('/conversations/send', sendMessageOptions);
+  client.post('/conversations/chat/send', sendMessageOptions);
+
+export const accpetFriendRequest = (id: string) =>
+  client.post('/user/friend-request/accept', { id });

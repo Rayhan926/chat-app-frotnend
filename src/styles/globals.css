@@ -41,13 +41,33 @@ span[aria-live='polite'] {
   line-height: 0;
 }
 
-/* .__its_me:first-child {
-  border-bottom-right-radius: 0px;
+._svg_spinner {
+  animation: rotate 2s linear infinite;
 }
-.__its_me:last-child {
-  border-top-right-radius: 0px;
-} */
-.__its_me + .__its_me {
-  border-top-right-radius: 0px;
-  border-top-left-radius: 0px;
+
+._svg_spinner .path {
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
 }

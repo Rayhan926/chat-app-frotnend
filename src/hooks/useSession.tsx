@@ -70,7 +70,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = useCallback(() => {
     cookies.remove('token');
     setAccessToken(null);
-    queryClient.invalidateQueries();
+    // queryClient.invalidateQueries();
+    queryClient.removeQueries();
     router.push('/login').then(() => removeBoth('user'));
   }, [router, queryClient]);
 

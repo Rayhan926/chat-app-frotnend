@@ -16,7 +16,7 @@ const Footer = () => {
         <TabButton
           activeIcon={<HiUsers size={25} />}
           icon={<HiOutlineUsers size={25} />}
-          path="/friend-requests"
+          path="/requests"
         />
       </div>
     </footer>

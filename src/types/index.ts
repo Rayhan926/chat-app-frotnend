@@ -33,7 +33,7 @@ export type DrawerProps = {
 };
 
 export type ToastType = {
-  type: 'success' | 'error';
+  type?: 'success' | 'error';
   message: string;
 };
 export type ToastAtomType = ToastType & {
@@ -72,4 +72,17 @@ export type TabButtonProps = {
   icon: ReactNode;
   activeIcon: ReactNode;
   path: string;
+};
+
+type Tab = {
+  title: string;
+  body: ReactNode;
+};
+export type RequestTabsProps = {
+  tabs: Tab[];
+};
+
+export type HomepageLayoutProps = {
+  children: ReactNode;
+  contentWrapperClass?: string;
 };
