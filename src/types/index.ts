@@ -1,4 +1,6 @@
+import { AxiosResponse } from 'axios';
 import { ReactNode } from 'react';
+import { UseMutationResult } from 'react-query';
 
 export type AuthProviderProps = {
   children?: ReactNode;
@@ -17,8 +19,13 @@ export type AuthContenxtValue = {
     user?: AuthUser | null;
   } | null;
   // eslint-disable-next-line no-unused-vars
-  googleLogin: (tokenId: string) => void;
   logout: () => void;
+  mutateGoogleLogin?: UseMutationResult<
+    AxiosResponse<any, any>,
+    unknown,
+    string,
+    unknown
+  >;
 };
 
 export type Login = {

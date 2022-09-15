@@ -2,7 +2,7 @@ import ChatBodyPortal from '@components/ChatBodyPortal';
 import Toast from '@components/Toast';
 import useToast from '@hooks/useToast';
 
-const ToastShower = () => {
+const ToastContainer = () => {
   const { toasts } = useToast();
   return (
     <ChatBodyPortal>
@@ -15,4 +15,4 @@ const ToastShower = () => {
   );
 };
 
-export default ToastShower;
+export default ToastContainer;

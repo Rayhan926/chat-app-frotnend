@@ -1,7 +1,7 @@
 import { accpetFriendRequest } from '@client/mutations';
 import Button from '@components/Button/Button';
-import useCancelFriendRequest from '@hooks/useCancelFriendRequest';
 import useFriendRequests from '@hooks/useFriendRequests';
+import useRejectFriendRequest from '@hooks/useRejectFriendRequest';
 import useToast from '@hooks/useToast';
 import { ChatBoxProps } from '@types';
 import Image from 'next/image';
@@ -20,7 +20,7 @@ const FriendRequest = ({ avatar, _id, name }: ChatBoxProps) => {
     onError: (err: any) => setToast({ message: err.response.data.message }),
   });
 
-  const cancel = useCancelFriendRequest(_id);
+  const reject = useRejectFriendRequest(_id, 'reject');
 
   return (
     <div className="flex items-center __px py-2.5 gap-4">
@@ -35,11 +35,11 @@ const FriendRequest = ({ avatar, _id, name }: ChatBoxProps) => {
 
       <div className="flex gap-2 ml-auto shrink-0">
         <Button
-          isLoading={cancel.isLoading}
-          onClick={() => cancel.mutate()}
+          isLoading={reject.isLoading}
+          onClick={() => reject.mutate()}
           className="bg-dark-100 text-dark-900"
         >
-          Cancel
+          Reject
         </Button>
         <Button isLoading={accept.isLoading} onClick={() => accept.mutate()}>
           Accept

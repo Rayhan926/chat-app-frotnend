@@ -1,5 +1,6 @@
 /* eslint-disable no-trailing-spaces */
 import client from '@client';
+import { googleLogin } from '@client/mutations';
 import { getLocal, removeBoth, setLocal } from '@lib/localstorage';
 import { AuthContenxtValue, AuthProviderProps, AuthUser, Login } from '@types';
 import { cookies } from '@utils';
@@ -12,12 +13,11 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import useConversations from './useConversations';
 
 const AuthContext = createContext<AuthContenxtValue>({
   session: null,
-  googleLogin: () => {},
   logout: () => {},
 });
 
@@ -30,29 +30,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // state
   const [localUser, setLocalUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  // loading conversation on every page load
-
-  useEffect(() => {
-    if (!accessToken) return;
-    refetch();
-  }, [refetch, accessToken]);
-
-  // Fetching user info if it's not in local storage but has the access token in cookie
-  useEffect(() => {
-    if (!localUser) {
-      client.get('/auth/get-user').then(({ data: { data } }) => {
-        setLocalUser(data);
-        setLocal('user', data);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Setting access token to state after page mounted
-  useEffect(() => {
-    setAccessToken(cookies.get('token'));
-    setLocalUser(getLocal('user'));
-  }, []);
 
   // Login
   const login = useCallback(
@@ -65,6 +42,44 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [router],
   );
 
+  const mutateGoogleLogin = useMutation(
+    (tokenId: string) => googleLogin(tokenId),
+    {
+      onSuccess: (data) => {
+        login({ token: data.data.data.token, user: data.data.data.user });
+      },
+    },
+  );
+
+  // loading conversation on every page load
+
+  useEffect(() => {
+    if (!accessToken) return;
+    refetch();
+  }, [refetch, accessToken]);
+
+  // Fetching user info if it's not in local storage but has the access token in cookie
+  useEffect(() => {
+    if (!accessToken && localUser) return;
+
+    const timeout = setTimeout(() => {
+      client.get('/auth/get-user').then(({ data: { data } }) => {
+        setLocalUser(data);
+        setLocal('user', data);
+      });
+    }, 500);
+
+    return () => clearTimeout(timeout);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Setting access token to state after page mounted
+  useEffect(() => {
+    setAccessToken(cookies.get('token'));
+    setLocalUser(getLocal('user'));
+  }, []);
+
   // Logout
   const logout = useCallback(() => {
     cookies.remove('token');
@@ -75,21 +90,21 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [router, queryClient]);
 
   // Google Login
-  const googleLogin = useCallback(
-    (tokenId: string) => {
-      client
-        .post('/auth/google-login', {
-          tokenId: `Bearer ${tokenId}`,
-        })
-        .then(({ data: { data } }) => {
-          login({
-            token: data.token,
-            user: data.user,
-          });
-        });
-    },
-    [login],
-  );
+  // const googleLogin = useCallback(
+  //   (tokenId: string) => {
+  //     client
+  //       .post('/auth/google-login', {
+  //         tokenId: `Bearer ${tokenId}`,
+  //       })
+  //       .then(({ data: { data } }) => {
+  //         login({
+  //           token: data.token,
+  //           user: data.user,
+  //         });
+  //       });
+  //   },
+  //   [login],
+  // );
 
   // Context value with useMemo
   const contextValue = useMemo<AuthContenxtValue>(() => {
@@ -98,10 +113,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         user: localUser,
         token: accessToken,
       },
-      googleLogin,
       logout,
+      mutateGoogleLogin,
     };
-  }, [localUser, accessToken, googleLogin, logout]);
+  }, [localUser, accessToken, logout, mutateGoogleLogin]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

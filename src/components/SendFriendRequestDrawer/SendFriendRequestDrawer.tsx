@@ -2,6 +2,7 @@ import { useOpenFriendRequestDrawer } from '@atoms';
 import { sendFriendRequest } from '@client/mutations';
 import Drawer from '@components/Drawer';
 import useToast from '@hooks/useToast';
+import { getErrorMsg } from '@utils';
 import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 
@@ -9,6 +10,16 @@ const SendFriendRequestDrawer = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('saymon3539');
   const [isOpen, setIsOpen] = useOpenFriendRequestDrawer();
   const { setToast } = useToast();
+
+  // useEffect(() => {
+  //   let f = 1;
+  //   const ff = setInterval(() => {
+  //     setToast({ message: `How are you ${f}` });
+  //     f += 1;
+  //   }, 1000);
+
+  //   return () => clearInterval(ff);
+  // }, []);
 
   const { mutate, isLoading } = useMutation(sendFriendRequest, {
     onSuccess: (res) =>
@@ -19,7 +30,7 @@ const SendFriendRequestDrawer = () => {
     onError: (err: any) =>
       setToast({
         type: 'error',
-        message: err.response.data.message,
+        message: getErrorMsg(err),
       }),
     onSettled: () => {
       setIsOpen(false);

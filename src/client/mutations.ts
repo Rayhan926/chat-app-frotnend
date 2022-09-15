@@ -1,6 +1,11 @@
 import client from '@client';
 import { SendMessageType } from '@types';
 
+export const googleLogin = (tokenId: string) =>
+  client.post('/auth/google-login', {
+    tokenId: `Bearer ${tokenId}`,
+  });
+
 export const sendFriendRequest = (sendTo: string) =>
   client.post('/user/friend-request', { sendTo });
 

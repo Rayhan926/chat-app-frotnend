@@ -1,5 +1,5 @@
 import ChatBodyWrapper from '@components/ChatBodyWrapper';
-import ToastShower from '@components/ToastShower';
+import ToastContainer from '@components/ToastContainer';
 import { AuthProvider } from '@hooks/useSession';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import type { AppProps } from 'next/app';
@@ -13,6 +13,9 @@ const queryClient = new QueryClient({
     queries: {
       retry: false,
       select: (res: any) => res.data.data,
+    },
+    mutations: {
+      retry: 1,
     },
   },
 });
@@ -29,7 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           >
             <ChatBodyWrapper>
               <Component {...pageProps} />
-              <ToastShower />
+              <ToastContainer />
             </ChatBodyWrapper>
           </SkeletonTheme>
         </AuthProvider>

@@ -1,12 +1,13 @@
-import { friendRequestsAtom } from '@atoms';
+import { friendRequestsSentAtom } from '@atoms';
 import { getSentFriendRequests } from '@client/queries';
 import { ChatBoxProps } from '@types';
 import { useAtom } from 'jotai';
 import { useQuery } from 'react-query';
 
 const useSentFriendRequests = () => {
-  const [sentFriendRequests, setSentFriendRequests] =
-    useAtom(friendRequestsAtom);
+  const [sentFriendRequests, setSentFriendRequests] = useAtom(
+    friendRequestsSentAtom,
+  );
 
   const query = useQuery('get-sent-friend-requests', getSentFriendRequests, {
     onSuccess: (requests: ChatBoxProps[]) => setSentFriendRequests(requests),

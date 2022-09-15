@@ -11,7 +11,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 // eslint-disable-next-line operator-linebreak
 const sideBtnStyle =
-  'rounded-full flex justify-center items-center h-full text-dark-900 cursor-pointer';
+  'rounded-full flex justify-center items-center h-full text-dark-900/50 cursor-pointer';
 
 const SendMessageInput = () => {
   const router = useRouter();
@@ -39,7 +39,7 @@ const SendMessageInput = () => {
 
   return (
     <form
-      className="shrink-0 flex gap-1 items-end pb-3.5 pt-2 px-4"
+      className="shrink-0 flex gap-1 items-end pb-3.5 pt-2 px-3.5"
       onSubmit={handleSubmit}
     >
       {/** Input --Start-- */}

@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 
+import NoData from '@components/NoData/NoData';
 import Spinner from '@components/Spinner';
 import useFriendRequests from '@hooks/useFriendRequests';
 import { useEffect } from 'react';
@@ -18,6 +19,8 @@ const FriendRequestsTab = () => {
         <Spinner />
       ) : isError ? (
         'Error'
+      ) : friendRequests.length <= 0 ? (
+        <NoData text="No Friend Requests" />
       ) : (
         friendRequests.map((request) => (
           <FriendRequest {...request} key={request?._id} />
