@@ -1,6 +1,7 @@
 import HomepageLayout from '@layouts/HomepageLayout';
 import RequestTabs from '@views/RequestsScreen/components/RequestTabs';
 import FriendRequestsTab from './components/FriendRequestsTab';
+import SentFriendRequestsTab from './components/SentFriendRequestsTab';
 
 const RequestsScreen = () => {
   return (
@@ -13,7 +14,7 @@ const RequestsScreen = () => {
           },
           {
             title: 'Sent Requests',
-            body: 'Sent Requests',
+            body: <SentFriendRequestsTab />,
           },
         ]}
       />

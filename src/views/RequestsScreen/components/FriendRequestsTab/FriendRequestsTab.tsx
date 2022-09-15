@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 
+import Spinner from '@components/Spinner';
 import useFriendRequests from '@hooks/useFriendRequests';
 import { useEffect } from 'react';
 import FriendRequest from './components/FriendRequest';
@@ -13,13 +14,15 @@ const FriendRequestsTab = () => {
   }, [refetch]);
   return (
     <div className="h-full overflow-y-auto scrollbar-none">
-      {isLoading || isIdle
-        ? 'Loading..'
-        : isError
-        ? 'Error'
-        : friendRequests.map((request) => (
-            <FriendRequest {...request} key={request?._id} />
-          ))}
+      {isLoading || isIdle ? (
+        <Spinner />
+      ) : isError ? (
+        'Error'
+      ) : (
+        friendRequests.map((request) => (
+          <FriendRequest {...request} key={request?._id} />
+        ))
+      )}
     </div>
   );
 };

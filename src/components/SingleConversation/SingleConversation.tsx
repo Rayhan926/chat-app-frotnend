@@ -15,8 +15,6 @@ const SingleConversation = ({
   const isOnline = status === 'online';
   // const isOffline = status === 'offline';
 
-  console.log({ lastMessage, unseenMessageCount });
-
   return (
     <Link href={`/chat/${username}`}>
       <a className="flex items-center __px py-2.5 gap-4 cursor-pointer hover:bg-dark-100/40">
@@ -48,7 +46,7 @@ const SingleConversation = ({
           </h3>
           {lastMessage && (
             <p className="text-sm text-dark-800 line-clamp-1">
-              {lastMessage.message}
+              {lastMessage?.message}
             </p>
           )}
         </div>

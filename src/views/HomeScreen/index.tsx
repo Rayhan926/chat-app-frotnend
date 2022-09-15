@@ -6,13 +6,13 @@ import ConversationSkelenton from '@skelentons/ConversationSkelenton';
 import { Conversation } from '@types';
 
 const HomeScreen = () => {
-  const { isIdle, isLoading, conversations } = useConversations();
+  const { isIdle, isLoading, data } = useConversations();
   return (
     <HomepageLayout>
       {isIdle || isLoading
         ? [...Array(10).keys()].map((e) => <ConversationSkelenton key={e} />)
-        : conversations &&
-          (conversations as any).map((conversation: Conversation) => (
+        : data &&
+          (data as any).map((conversation: Conversation) => (
             <SingleConversation {...conversation} key={conversation._id} />
           ))}
     </HomepageLayout>

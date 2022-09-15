@@ -21,7 +21,7 @@ const UserAvatar = () => {
         <Image
           layout="fill"
           src={user?.avatar || '/images/avatar.png'}
-          alt={'User'}
+          alt={user?.name || ''}
         />
       </div>
     </div>

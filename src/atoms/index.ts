@@ -9,3 +9,4 @@ export const toastAtom = atom<ToastAtomType[]>([]);
 export const conversationsAtom = atom<Conversation[]>([]);
 export const chatsAtom = atom<Chat[]>([]);
 export const friendRequestsAtom = atom<ChatBoxProps[]>([]);
+export const friendRequestsSentAtom = atom<ChatBoxProps[]>([]);

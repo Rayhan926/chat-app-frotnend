@@ -6,7 +6,7 @@ import TabButton from '../TabButton';
 const Footer = () => {
   return (
     <footer className="relative">
-      <div className="flex justify-between items-center bg-white border-t border-dark-100 px-12 py-2 pb-3">
+      <div className="flex justify-between items-center bg-white border-t border-dark-100">
         <TabButton
           icon={<IoChatbubblesOutline size={25} />}
           activeIcon={<IoChatbubblesSharp size={25} />}

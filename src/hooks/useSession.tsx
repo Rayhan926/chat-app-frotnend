@@ -30,7 +30,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // state
   const [localUser, setLocalUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-
   // loading conversation on every page load
 
   useEffect(() => {

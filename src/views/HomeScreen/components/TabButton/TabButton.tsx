@@ -11,7 +11,7 @@ const TabButton = ({ activeIcon, icon, path }: TabButtonProps) => {
     <Link href={path}>
       <a
         className={cx(
-          'p-3 rounded-lg cursor-pointer hover:bg-primary/5',
+          'px-3 py-4 pb-5 grow flex justify-center rounded-lg cursor-pointer hover:bg-primary/5',
           isActive ? 'text-primary' : 'hover:text-primary text-dark-700/70',
         )}
       >

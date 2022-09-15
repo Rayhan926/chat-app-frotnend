@@ -1,26 +1,10 @@
-import { accpetFriendRequest } from '@client/mutations';
 import Button from '@components/Button/Button';
 import useCancelFriendRequest from '@hooks/useCancelFriendRequest';
-import useFriendRequests from '@hooks/useFriendRequests';
-import useToast from '@hooks/useToast';
 import { ChatBoxProps } from '@types';
 import Image from 'next/image';
-import { useMutation } from 'react-query';
 
-const FriendRequest = ({ avatar, _id, name }: ChatBoxProps) => {
-  const { setToast } = useToast();
-  const { removeFromList } = useFriendRequests();
-
-  // accpet request
-  const accept = useMutation(() => accpetFriendRequest(_id), {
-    onSuccess: (res) => {
-      removeFromList(_id);
-      setToast({ message: res.data.message });
-    },
-    onError: (err: any) => setToast({ message: err.response.data.message }),
-  });
-
-  const cancel = useCancelFriendRequest(_id);
+const FriendRequestSent = ({ avatar, _id, name }: ChatBoxProps) => {
+  const cancel = useCancelFriendRequest(_id, 'cancel');
 
   return (
     <div className="flex items-center __px py-2.5 gap-4">
@@ -41,12 +25,9 @@ const FriendRequest = ({ avatar, _id, name }: ChatBoxProps) => {
         >
           Cancel
         </Button>
-        <Button isLoading={accept.isLoading} onClick={() => accept.mutate()}>
-          Accept
-        </Button>
       </div>
     </div>
   );
 };
 
-export default FriendRequest;
+export default FriendRequestSent;
