@@ -15,3 +15,12 @@ export const getErrorMsg = (err: any) => {
 
   return msg;
 };
+
+export const scrollChatScreenToBottom = () => {
+  const messagesWrapper = document.getElementById('messages_wrapper');
+  if (!messagesWrapper) return;
+
+  setTimeout(() => {
+    messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+  }, 5);
+};

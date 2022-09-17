@@ -3,7 +3,7 @@ import client from '@client';
 import { googleLogin } from '@client/mutations';
 import { getLocal, removeBoth, setLocal } from '@lib/localstorage';
 import { AuthContenxtValue, AuthProviderProps, AuthUser, Login } from '@types';
-import { cookies } from '@utils';
+import { cookies, getErrorMsg } from '@utils';
 import { useRouter } from 'next/router';
 import {
   createContext,
@@ -15,6 +15,7 @@ import {
 } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import useConversations from './useConversations';
+import useToast from './useToast';
 
 const AuthContext = createContext<AuthContenxtValue>({
   session: null,
@@ -26,6 +27,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const queryClient = useQueryClient();
   const { refetch } = useConversations();
   const router = useRouter();
+  const { setToast } = useToast();
 
   // state
   const [localUser, setLocalUser] = useState<AuthUser | null>(null);
@@ -37,6 +39,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       cookies.set('token', token, { path: '/' });
       setAccessToken(token);
       setLocalUser(user);
+      setLocal('user', user);
       router.push('/');
     },
     [router],
@@ -48,6 +51,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       onSuccess: (data) => {
         login({ token: data.data.data.token, user: data.data.data.user });
       },
+      onError: (err) => setToast({ message: getErrorMsg(err) }),
     },
   );
 
@@ -60,7 +64,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Fetching user info if it's not in local storage but has the access token in cookie
   useEffect(() => {
-    if (!accessToken && localUser) return;
+    if (localUser) return;
 
     const timeout = setTimeout(() => {
       client.get('/auth/get-user').then(({ data: { data } }) => {
@@ -72,7 +76,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => clearTimeout(timeout);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [localUser]);
 
   // Setting access token to state after page mounted
   useEffect(() => {
@@ -84,9 +88,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = useCallback(() => {
     cookies.remove('token');
     setAccessToken(null);
-    // queryClient.invalidateQueries();
-    queryClient.removeQueries();
-    router.push('/login').then(() => removeBoth('user'));
+
+    router.push('/login').then(() => {
+      removeBoth('user');
+      queryClient.removeQueries();
+    });
   }, [router, queryClient]);
 
   // Google Login

@@ -6,6 +6,7 @@ const Message = ({ message, senderId }: Chat) => {
   const { session } = useSession();
 
   const isMe = senderId === session?.user?._id;
+
   return (
     <div>
       <div

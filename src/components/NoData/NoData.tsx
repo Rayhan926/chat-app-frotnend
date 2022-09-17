@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const NoData = ({ text }: { text?: string }) => {
   return (
-    <div className="h-full flex items-center flex-col justify-center">
+    <div className="h-full flex items-center flex-col justify-center text-center">
       <div className="max-w-[75%]">
         <Image
           width={1228}

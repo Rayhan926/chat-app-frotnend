@@ -1,8 +1,13 @@
 import { sendMessage } from '@client/mutations';
+import { HOT_KEYS } from '@config/constants';
+import useChats from '@hooks/useChats';
 import useConversations from '@hooks/useConversations';
-import { cx } from '@utils';
+import useRandomId from '@hooks/useRandomId';
+import useSession from '@hooks/useSession';
+import { cx, scrollChatScreenToBottom } from '@utils';
+import hotkeys from 'hotkeys-js';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { ImAttachment } from 'react-icons/im';
 import { IoMdSend } from 'react-icons/io';
@@ -15,27 +20,64 @@ const sideBtnStyle =
 
 const SendMessageInput = () => {
   const router = useRouter();
+  const { randomId, refresh } = useRandomId();
   const [message, setMessage] = useState('');
   const { getUserInfo } = useConversations();
+  const { addChat, replaceChat } = useChats();
+  const { session } = useSession();
 
   const { mutate } = useMutation(sendMessage, {
-    onSuccess: () => {
-      setMessage('');
+    onSuccess: (data) => {
+      replaceChat(randomId, data.data.data);
     },
   });
 
-  const { user } = getUserInfo(router.query.id as string);
+  const { user: receiverUser } = getUserInfo(router.query.id as string);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    (e?: React.FormEvent) => {
+      e?.preventDefault();
+      const trimmedMsg = message.trim();
 
-    if (!user?._id || !message.trim()) return;
+      if (!receiverUser?._id || !trimmedMsg || !session?.user?._id) return;
 
-    mutate({
-      message: message.trim(),
-      sendTo: user?._id,
+      addChat({
+        _id: randomId,
+        senderId: session?.user?._id,
+        message: trimmedMsg,
+      });
+      setTimeout(() => {
+        setMessage('');
+      });
+      refresh();
+      scrollChatScreenToBottom();
+
+      mutate({
+        message: trimmedMsg,
+        sendTo: receiverUser?._id,
+      });
+    },
+    [
+      addChat,
+      message,
+      mutate,
+      randomId,
+      receiverUser?._id,
+      refresh,
+      session?.user?._id,
+    ],
+  );
+
+  useEffect(() => {
+    hotkeys.filter = () => {
+      return true;
+    };
+    hotkeys(HOT_KEYS, () => {
+      // handleSubmit();
+      console.log('first');
+      return false;
     });
-  };
+  }, [handleSubmit]);
 
   return (
     <form
@@ -51,7 +93,10 @@ const SendMessageInput = () => {
           maxRows={4}
           placeholder="Message"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          id="message_input"
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }}
           className="w-full resize-none outline-none py-2.5 px-3 text-dark-900 placeholder:text-dark-700 bg-transparent"
         />
         <button type="button" className={cx('pr-3', sideBtnStyle)}>

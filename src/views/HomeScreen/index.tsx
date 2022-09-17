@@ -1,4 +1,5 @@
 /* eslint-disable indent */
+import Error from '@components/Error/Error';
 import NoData from '@components/NoData/NoData';
 import SingleConversation from '@components/SingleConversation';
 import useConversations from '@hooks/useConversations';
@@ -23,7 +24,7 @@ const HomeScreen = () => {
       {isIdle || isLoading ? (
         [...Array(10).keys()].map((e) => <ConversationSkelenton key={e} />)
       ) : isError ? (
-        'Error'
+        <Error text="Failed to load conversations" />
       ) : (data as any)?.length <= 0 ? (
         <NoData text="No Conversation Found" />
       ) : (

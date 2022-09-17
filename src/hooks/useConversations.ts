@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 const useConversations = () => {
   const query = useQuery('get-conversations', getConversations, {
     enabled: false,
-    retry: 3,
+    retry: 2,
   });
 
   const getUserInfo = (username: string) => {

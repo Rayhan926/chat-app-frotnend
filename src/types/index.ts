@@ -59,10 +59,10 @@ export type ChatBoxProps = {
 export type Chat = {
   _id: string;
   senderId: string;
-  receiverId: string;
+  receiverId?: string;
   message: string;
-  status: 'sent' | 'delivered' | 'seen';
-  createdAt: Date;
+  status?: 'sent' | 'delivered' | 'seen';
+  createdAt?: Date;
 };
 
 export type Conversation = ChatBoxProps & {

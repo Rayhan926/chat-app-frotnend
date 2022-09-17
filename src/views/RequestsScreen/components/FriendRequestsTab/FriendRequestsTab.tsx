@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 
+import Error from '@components/Error/Error';
 import NoData from '@components/NoData/NoData';
 import Spinner from '@components/Spinner';
 import useFriendRequests from '@hooks/useFriendRequests';
@@ -14,11 +15,11 @@ const FriendRequestsTab = () => {
     refetch();
   }, [refetch]);
   return (
-    <div className="h-full overflow-y-auto scrollbar-none">
+    <div className="grow overflow-y-auto scrollbar-none">
       {isLoading || isIdle ? (
         <Spinner />
       ) : isError ? (
-        'Error'
+        <Error text="Failed to load friend requests" />
       ) : friendRequests.length <= 0 ? (
         <NoData text="No Friend Requests" />
       ) : (

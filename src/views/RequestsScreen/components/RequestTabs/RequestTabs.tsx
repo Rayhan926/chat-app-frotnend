@@ -7,7 +7,7 @@ const RequestTabs = ({ tabs }: RequestTabsProps) => {
 
   const activeBody = tabs[activeIndex].body;
   return (
-    <div className="h-full">
+    <div className="h-full flex flex-col">
       {/** Tabs Header --Start-- */}
       <div className="flex">
         {tabs.map((tab, i) => {
