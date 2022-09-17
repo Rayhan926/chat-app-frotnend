@@ -2,41 +2,40 @@ import { sendMessage } from '@client/mutations';
 import { HOT_KEYS } from '@config/constants';
 import useChats from '@hooks/useChats';
 import useConversations from '@hooks/useConversations';
+import useMessageInput from '@hooks/useMessageInput';
 import useRandomId from '@hooks/useRandomId';
 import useSession from '@hooks/useSession';
-import { cx, scrollChatScreenToBottom } from '@utils';
-import hotkeys from 'hotkeys-js';
+import { scrollChatScreenToBottom } from '@utils';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
-import { BsEmojiSmile } from 'react-icons/bs';
-import { ImAttachment } from 'react-icons/im';
+import React, { useCallback } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 import { IoMdSend } from 'react-icons/io';
 import { useMutation } from 'react-query';
 import TextareaAutosize from 'react-textarea-autosize';
-
-// eslint-disable-next-line operator-linebreak
-const sideBtnStyle =
-  'rounded-full flex justify-center items-center h-full text-dark-900/50 cursor-pointer';
+import AttachmentsPicker from './components/AttachmentsPicker';
+import EmojiPicker from './components/EmojiPicker';
 
 const SendMessageInput = () => {
   const router = useRouter();
   const { randomId, refresh } = useRandomId();
-  const [message, setMessage] = useState('');
+  const { message, setFieldValue } = useMessageInput();
   const { getUserInfo } = useConversations();
   const { addChat, replaceChat } = useChats();
   const { session } = useSession();
 
+  const { user: receiverUser } = getUserInfo(router.query.id as string);
+
+  // send message to the server mutation
   const { mutate } = useMutation(sendMessage, {
     onSuccess: (data) => {
       replaceChat(randomId, data.data.data);
     },
   });
 
-  const { user: receiverUser } = getUserInfo(router.query.id as string);
-
   const handleSubmit = useCallback(
     (e?: React.FormEvent) => {
       e?.preventDefault();
+
       const trimmedMsg = message.trim();
 
       if (!receiverUser?._id || !trimmedMsg || !session?.user?._id) return;
@@ -47,7 +46,7 @@ const SendMessageInput = () => {
         message: trimmedMsg,
       });
       setTimeout(() => {
-        setMessage('');
+        setFieldValue('message', '');
       });
       refresh();
       scrollChatScreenToBottom();
@@ -65,19 +64,13 @@ const SendMessageInput = () => {
       receiverUser?._id,
       refresh,
       session?.user?._id,
+      setFieldValue,
     ],
   );
 
-  useEffect(() => {
-    hotkeys.filter = () => {
-      return true;
-    };
-    hotkeys(HOT_KEYS, () => {
-      // handleSubmit();
-      console.log('first');
-      return false;
-    });
-  }, [handleSubmit]);
+  useHotkeys(HOT_KEYS, () => handleSubmit(), {
+    enableOnTags: ['TEXTAREA'],
+  });
 
   return (
     <form
@@ -85,23 +78,19 @@ const SendMessageInput = () => {
       onSubmit={handleSubmit}
     >
       {/** Input --Start-- */}
-      <div className="grow flex rounded-[25px] items-center bg-dark-100 min-h-11">
-        <button type="button" className={cx('pl-3', sideBtnStyle)}>
-          <BsEmojiSmile size={20} />
-        </button>
+      <div className="grow flex rounded-[25px] items-center bg-dark-100 min-h-11 relative">
+        <EmojiPicker />
         <TextareaAutosize
           maxRows={4}
           placeholder="Message"
           value={message}
           id="message_input"
           onChange={(e) => {
-            setMessage(e.target.value);
+            setFieldValue('message', e.target.value);
           }}
           className="w-full resize-none outline-none py-2.5 px-3 text-dark-900 placeholder:text-dark-700 bg-transparent"
         />
-        <button type="button" className={cx('pr-3', sideBtnStyle)}>
-          <ImAttachment size={18} />
-        </button>
+        <AttachmentsPicker />
       </div>
       {/** Input --End-- */}
 

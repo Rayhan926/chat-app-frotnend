@@ -1,6 +1,7 @@
 /* eslint-disable no-trailing-spaces */
 import client from '@client';
 import { googleLogin } from '@client/mutations';
+import { TOKEN_KEY, USER_KEY } from '@config/constants';
 import { getLocal, removeBoth, setLocal } from '@lib/localstorage';
 import { AuthContenxtValue, AuthProviderProps, AuthUser, Login } from '@types';
 import { cookies, getErrorMsg } from '@utils';
@@ -36,10 +37,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // Login
   const login = useCallback(
     ({ token, user }: Login) => {
-      cookies.set('token', token, { path: '/' });
+      cookies.set(TOKEN_KEY, token, { path: '/' });
       setAccessToken(token);
       setLocalUser(user);
-      setLocal('user', user);
+      setLocal(USER_KEY, user);
       router.push('/');
     },
     [router],
@@ -69,7 +70,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const timeout = setTimeout(() => {
       client.get('/auth/get-user').then(({ data: { data } }) => {
         setLocalUser(data);
-        setLocal('user', data);
+        setLocal(USER_KEY, data);
       });
     }, 500);
 
@@ -80,17 +81,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Setting access token to state after page mounted
   useEffect(() => {
-    setAccessToken(cookies.get('token'));
-    setLocalUser(getLocal('user'));
+    setAccessToken(cookies.get(TOKEN_KEY));
+    setLocalUser(getLocal(USER_KEY));
   }, []);
 
   // Logout
   const logout = useCallback(() => {
-    cookies.remove('token');
+    cookies.remove(TOKEN_KEY);
     setAccessToken(null);
 
     router.push('/login').then(() => {
-      removeBoth('user');
+      removeBoth(USER_KEY);
       queryClient.removeQueries();
     });
   }, [router, queryClient]);

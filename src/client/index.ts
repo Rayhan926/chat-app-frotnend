@@ -1,3 +1,4 @@
+import { TOKEN_KEY } from '@config/constants';
 import { cookies } from '@utils';
 import axios from 'axios';
 
@@ -7,7 +8,7 @@ const client = axios.create({
 
 client.interceptors.request.use(
   (config) => {
-    const token = cookies.get('token');
+    const token = cookies.get(TOKEN_KEY);
     return {
       ...config,
       headers: {

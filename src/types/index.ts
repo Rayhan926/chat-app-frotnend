@@ -93,3 +93,7 @@ export type HomepageLayoutProps = {
   children: ReactNode;
   contentWrapperClass?: string;
 };
+
+export type MessageInputType = {
+  message: string;
+};

@@ -9,6 +9,9 @@
   .float_btn_shadow {
     box-shadow: 0 0 20px theme(colors.primary / 30%);
   }
+  .__emoji_btn {
+    @apply rounded-full flex justify-center items-center h-full text-dark-900/50 cursor-pointer;
+  }
 }
 
 body {
@@ -70,4 +73,8 @@ span[aria-live='polite'] {
     stroke-dasharray: 90, 150;
     stroke-dashoffset: -124;
   }
+}
+
+.emoji-picker-react {
+  @apply !w-full;
 }

@@ -1,3 +1,4 @@
+import { TOKEN_KEY } from '@config/constants';
 import * as jose from 'jose';
 import { NextResponse, type NextRequest } from 'next/server';
 import { authenticatedRoutes, unAuthenticatedRoutes } from './config';
@@ -8,7 +9,7 @@ export async function middleware(req: NextRequest) {
     !!authenticatedRoutes.find((route) => pathname.startsWith(route)) ||
     pathname === '/';
 
-  const token = req.cookies.get('token');
+  const token = req.cookies.get(TOKEN_KEY);
 
   try {
     await jose.jwtVerify(
