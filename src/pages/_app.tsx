@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
       select: (res: any) => res.data.data,
     },
     mutations: {
-      retry: 1,
+      retry: false,
     },
   },
 });

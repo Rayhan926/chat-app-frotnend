@@ -56,13 +56,20 @@ export type ChatBoxProps = {
   status: 'online' | 'offline';
 };
 
+type Attachments = {
+  path: string;
+  mimetype: string;
+  _id: string;
+};
+
 export type Chat = {
   _id: string;
   senderId: string;
   receiverId?: string;
   message: string;
-  status?: 'sent' | 'delivered' | 'seen';
+  status?: 'sending' | 'error' | 'sent' | 'delivered' | 'seen';
   createdAt?: Date;
+  attachments?: Attachments[];
 };
 
 export type Conversation = ChatBoxProps & {
@@ -96,4 +103,10 @@ export type HomepageLayoutProps = {
 
 export type MessageInputType = {
   message: string;
+};
+
+export type FileWithAdditionalFields = File & {
+  preview: string;
+  width: 0;
+  height: 0;
 };

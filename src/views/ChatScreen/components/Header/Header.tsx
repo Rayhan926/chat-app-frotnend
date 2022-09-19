@@ -11,7 +11,7 @@ const Header = () => {
   const { user } = getUserInfo(router.query.id as string);
 
   return (
-    <div className="flex items-center __px shrink-0 py-3 gap-2 border-b border-dark-100">
+    <div className="flex items-center __px shrink-0 py-4 gap-2 border-b border-dark-100">
       {/** Go back --Start-- */}
       <button
         onClick={() => router.back()}

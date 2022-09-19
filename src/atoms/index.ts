@@ -2,6 +2,7 @@ import {
   Chat,
   ChatBoxProps,
   Conversation,
+  FileWithAdditionalFields,
   MessageInputType,
   ToastAtomType,
 } from '@types';
@@ -19,3 +20,5 @@ export const friendRequestsSentAtom = atom<ChatBoxProps[]>([]);
 export const messageInputAtom = atom<MessageInputType>({
   message: '',
 });
+
+export const filesAtom = atom<FileWithAdditionalFields[]>([]);

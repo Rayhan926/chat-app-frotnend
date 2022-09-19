@@ -78,3 +78,6 @@ span[aria-live='polite'] {
 .emoji-picker-react {
   @apply !w-full;
 }
+em-emoji-picker {
+  width: 100% !important;
+}

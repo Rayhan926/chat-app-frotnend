@@ -7,19 +7,9 @@ import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 
 const SendFriendRequestDrawer = () => {
-  const [usernameOrEmail, setUsernameOrEmail] = useState('saymon3539');
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [isOpen, setIsOpen] = useOpenFriendRequestDrawer();
   const { setToast } = useToast();
-
-  // useEffect(() => {
-  //   let f = 1;
-  //   const ff = setInterval(() => {
-  //     setToast({ message: `How are you ${f}` });
-  //     f += 1;
-  //   }, 1000);
-
-  //   return () => clearInterval(ff);
-  // }, []);
 
   const { mutate, isLoading } = useMutation(sendFriendRequest, {
     onSuccess: (res) =>

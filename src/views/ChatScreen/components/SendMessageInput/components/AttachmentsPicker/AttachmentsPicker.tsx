@@ -9,7 +9,7 @@ const AttachmentsPicker = () => {
         <ImAttachment size={18} />
       </button>
 
-      <input {...getInputProps()} className="sr-only" />
+      <input {...getInputProps()} id="attachmentsInput" className="sr-only" />
     </div>
   );
 };

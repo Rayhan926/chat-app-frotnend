@@ -28,7 +28,20 @@ const useChats = () => {
   );
 
   const addChat = (chat: Chat) => {
-    setChats((prevChats) => [...prevChats, chat]);
+    setChats((prevChats) => [
+      ...prevChats,
+      {
+        status: 'sending',
+        createdAt: Date.now() as unknown as Date,
+        ...chat,
+      },
+    ]);
+  };
+
+  const updateChat = (id: string, data: {}) => {
+    setChats((prevChats) =>
+      prevChats.map((chat) => (chat._id === id ? { ...chat, ...data } : chat)),
+    );
   };
 
   const replaceChat = (ordinaryId: string, newChatData: Chat) => {
@@ -43,6 +56,7 @@ const useChats = () => {
     chats,
     addChat,
     replaceChat,
+    updateChat,
     ...query,
   };
 };

@@ -10,7 +10,7 @@ export const getErrorMsg = (err: any) => {
   try {
     msg = err.response.data.message;
   } catch (error) {
-    msg = 'Something went wrong';
+    msg = err?.message || 'Something went wrong';
   }
 
   return msg;
@@ -23,4 +23,8 @@ export const scrollChatScreenToBottom = () => {
   setTimeout(() => {
     messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
   }, 5);
+};
+
+export const getFullPath = (path: string) => {
+  return process.env.NEXT_PUBLIC_BASE_URL + path;
 };
