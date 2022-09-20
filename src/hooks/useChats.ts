@@ -33,6 +33,7 @@ const useChats = () => {
       {
         status: 'sending',
         createdAt: Date.now() as unknown as Date,
+        uploadProgress: null,
         ...chat,
       },
     ]);

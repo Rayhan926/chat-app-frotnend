@@ -11,7 +11,7 @@ const ChatScreen = () => {
     <div className="h-full flex flex-col">
       <Header />
       <div
-        className="__px grow space-y-1 overflow-y-auto py-4 pb-2 scrollbar-none scroll-smooth"
+        className="__px grow space-y-0.5 overflow-y-auto py-4 pb-2 scrollbar-none scroll-smooth"
         id="messages_wrapper"
       >
         {isLoading || isIdle ? (

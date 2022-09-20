@@ -26,7 +26,7 @@ const EmojiPicker = () => {
 
       <div
         className={cx(
-          'absolute bottom-[calc(100%+8px)] left-0 w-full bg-white duration-500',
+          'absolute bottom-[calc(100%+8px)] left-0 w-full bg-white duration-500 z-[20]',
           isOpenPicker
             ? 'opacity-100 translate-y-0'
             : 'opacity-0 pointer-events-none -translate-y-5',

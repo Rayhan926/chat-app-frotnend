@@ -28,3 +28,16 @@ export const scrollChatScreenToBottom = () => {
 export const getFullPath = (path: string) => {
   return process.env.NEXT_PUBLIC_BASE_URL + path;
 };
+
+export const getHeightAndWidthFromDataUrl = async (file: any) =>
+  new Promise((resolve) => {
+    const dataURL = URL.createObjectURL(file);
+    const img = new Image();
+    img.src = dataURL;
+    img.onload = () => {
+      resolve({
+        height: img.height,
+        width: img.width,
+      });
+    };
+  });

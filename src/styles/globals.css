@@ -81,3 +81,29 @@ span[aria-live='polite'] {
 em-emoji-picker {
   width: 100% !important;
 }
+
+.__its_not_me + .__its_me {
+  @apply !mt-3;
+}
+/* 
+.__its_me:first-child > div {
+  @apply rounded-tr-xl;
+}
+.__its_me:last-child > div {
+  @apply rounded-r-xl;
+}
+
+.__its_me + .__its_me > div {
+  @apply rounded-tr-none;
+}
+
+.__its_not_me:first-child > div {
+  @apply rounded-tl-xl;
+}
+.__its_not_me:last-child > div {
+  @apply rounded-l-xl;
+}
+
+.__its_not_me + .__its_me > div {
+  @apply rounded-tr-xl;
+} */

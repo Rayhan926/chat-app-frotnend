@@ -3,21 +3,10 @@
 /* eslint-disable no-restricted-syntax */
 import { filesAtom } from '@atoms';
 import { FileWithAdditionalFields } from '@types';
+import { getHeightAndWidthFromDataUrl } from '@utils';
 import { useAtom } from 'jotai';
 import { useDropzone } from 'react-dropzone';
-
-const getHeightAndWidthFromDataUrl = async (file: any) =>
-  new Promise((resolve) => {
-    const dataURL = URL.createObjectURL(file);
-    const img = new Image();
-    img.src = dataURL;
-    img.onload = () => {
-      resolve({
-        height: img.height,
-        width: img.width,
-      });
-    };
-  });
+import { v4 as uuid } from 'uuid';
 
 const useDropFiles = () => {
   const [files, setFiles] = useAtom(filesAtom);
@@ -25,7 +14,7 @@ const useDropFiles = () => {
   const withAdditionalFields: FileWithAdditionalFields[] = [];
 
   const onDrop = async (acceptedFiles: File[]) => {
-    const dddd = async () => {
+    const withFileDimensions = async () => {
       for (let i = 0; i < acceptedFiles.length; i += 1) {
         const file: any = acceptedFiles[i];
         const d: any = await getHeightAndWidthFromDataUrl(file);
@@ -33,12 +22,13 @@ const useDropFiles = () => {
         file.width = d.width;
         file.height = d.height;
         file.preview = URL.createObjectURL(file);
+        file._id = uuid();
 
         withAdditionalFields[i] = file;
       }
     };
 
-    await dddd();
+    await withFileDimensions();
 
     setFiles((prev) => [...prev, ...withAdditionalFields]);
   };

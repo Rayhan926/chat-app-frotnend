@@ -1,4 +1,4 @@
-import { sendMessage } from '@client/mutations';
+import client from '@client';
 import { HOT_KEYS } from '@config/constants';
 import useChats from '@hooks/useChats';
 import useConversations from '@hooks/useConversations';
@@ -7,6 +7,7 @@ import useMessageInput from '@hooks/useMessageInput';
 import useRandomId from '@hooks/useRandomId';
 import useSession from '@hooks/useSession';
 import useToast from '@hooks/useToast';
+import { SendMessageType } from '@types';
 import { getErrorMsg, scrollChatScreenToBottom } from '@utils';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
@@ -31,15 +32,35 @@ const SendMessageInput = () => {
   const { user: receiverUser } = getUserInfo(router.query.id as string);
 
   // send message to the server mutation
-  const { mutate } = useMutation(sendMessage, {
-    onSuccess: (data) => {
-      replaceChat(randomId, data.data.data);
+  const { mutate } = useMutation(
+    (sendMessageOptions: SendMessageType) =>
+      client.post('/conversations/chat/send', sendMessageOptions, {
+        onUploadProgress(progressEvent) {
+          const uploadProgress = (
+            (progressEvent.loaded / progressEvent.total) *
+            100
+          ).toFixed(2);
+
+          const toNumber = parseInt(uploadProgress, 10);
+          updateChat(randomId, { uploadProgress: toNumber });
+          if (toNumber === 100) {
+            setTimeout(() => {
+              updateChat(randomId, { uploadProgress: null });
+            }, 500);
+          }
+        },
+      }),
+    {
+      onSuccess: (data) => {
+        replaceChat(randomId, data.data.data);
+        updateChat(randomId, { uploadProgress: null });
+      },
+      onError: (err) => {
+        setToast({ message: getErrorMsg(err) });
+        updateChat(randomId, { status: 'error' });
+      },
     },
-    onError: (err) => {
-      setToast({ message: getErrorMsg(err) });
-      updateChat(randomId, { status: 'error' });
-    },
-  });
+  );
 
   const handleSubmit = useCallback(
     (e?: React.FormEvent) => {
@@ -54,12 +75,13 @@ const SendMessageInput = () => {
         _id: randomId,
         senderId: session?.user?._id,
         message: trimmedMsg,
+        attachments: files,
       });
       setFiles([]);
+      refresh();
       setTimeout(() => {
         setFieldValue('message', '');
       });
-      refresh();
       scrollChatScreenToBottom();
 
       const formData = new FormData();
@@ -68,13 +90,26 @@ const SendMessageInput = () => {
 
       if (files.length > 0) {
         for (let x = 0; x < files.length; x += 1) {
-          formData.append('attachments', files[x]);
+          const file = files[x];
+          formData.append('attachments', file);
         }
+
+        formData.append(
+          'attachmentsMeta',
+          JSON.stringify(
+            files.map((file) => ({
+              width: file.width,
+              height: file.height,
+            })),
+          ),
+        );
       }
+
       mutate(formData as any);
     },
     [
       files,
+      setFiles,
       addChat,
       message,
       mutate,

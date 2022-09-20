@@ -1,7 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 import useSession from '@hooks/useSession';
 import { Chat } from '@types';
 import { cx, getFullPath } from '@utils';
 import moment from 'moment';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { BiErrorAlt } from 'react-icons/bi';
 import {
   IoCheckmarkDoneSharp,
@@ -9,12 +12,17 @@ import {
   IoEllipsisHorizontalSharp,
 } from 'react-icons/io5';
 
+const MessageUploadProgressIndicatior = dynamic(
+  () => import('../MessageUploadProgressIndicatior'),
+);
+
 const Message = ({
   message,
   senderId,
   status,
   createdAt,
   attachments = [],
+  uploadProgress = null,
 }: Chat) => {
   const { session } = useSession();
 
@@ -27,34 +35,59 @@ const Message = ({
   const hasAttachments = attachments.length > 0;
 
   return (
-    <div>
+    <div className={cx(isMe ? '__its_me' : '__its_not_me')}>
       <div
         // rounded-[20px]
         className={cx(
-          'max-w-[75%] w-fit rounded-xl relative',
-          isMe ? 'bg-primary text-white ml-auto' : 'bg-dark-100 text-dark-900',
+          'max-w-[75%] w-fit relative overflow-hidden',
+          isMe
+            ? 'bg-primary text-white ml-auto rounded-xl'
+            : 'bg-dark-100 text-dark-900 rounded-xl',
         )}
       >
         {/** Attachments Preview --Start-- */}
         {hasAttachments && (
-          <div
-            style={{
-              // gridTemplateColumns: attachments.length >= 2 ? '1fr 1fr' : '1fr',
-              gridTemplateColumns: '1fr',
-            }}
-            className={cx(
-              'p-[3px] grid gap-[3px]',
-              message ? 'pb-0' : 'pb-[3px]',
+          <div className="relative">
+            {isSending && (
+              <MessageUploadProgressIndicatior percentage={uploadProgress} />
             )}
-          >
-            {attachments.map((attachment) => (
-              <div
-                className="bg-white rounded-[10px] overflow-hidden"
-                key={attachment._id}
-              >
-                <img src={getFullPath(attachment.path)} className="w-full" />
-              </div>
-            ))}
+
+            <div
+              style={{
+                // gridTemplateColumns: attachments.length >= 2 ? '1fr 1fr' : '1fr',
+                gridTemplateColumns: '1fr',
+              }}
+              className={cx(
+                'p-[3px] grid gap-[3px]',
+                message ? 'pb-0' : 'pb-[3px]',
+              )}
+            >
+              {attachments.map((attachment) => (
+                <div
+                  className="bg-white first:rounded-t-[10px] last:rounded-b-[10px] overflow-hidden [&>span]:!block"
+                  key={attachment._id}
+                >
+                  <Image
+                    alt=""
+                    src={
+                      attachment?.preview || getFullPath(attachment?.path || '')
+                    }
+                    width={attachment.width}
+                    height={attachment.height}
+                    className="w-full"
+                  />
+                  {/* <img
+                  alt=""
+                  src={
+                    attachment?.preview || getFullPath(attachment?.path || '')
+                  }
+                  // width={attachment.width}
+                  // height={attachment.height}
+                  className="w-full"
+                /> */}
+                </div>
+              ))}
+            </div>
           </div>
         )}
         {/** Attachments Preview --End-- */}

@@ -4,10 +4,17 @@ type CircularProgressProps = React.ComponentProps<'svg'> & {
   color?: string;
   size?: number | string;
   children?: React.ReactNode;
+  strokeWidth?: number;
 };
 
 function CircularProgress(ownerState: CircularProgressProps) {
-  const { size = '100%', color, className = '', ...props } = ownerState;
+  const {
+    size = '100%',
+    color,
+    className = '',
+    strokeWidth = 5,
+    ...props
+  } = ownerState;
   return (
     <svg
       className={`_svg_spinner ${className}`}
@@ -22,7 +29,7 @@ function CircularProgress(ownerState: CircularProgressProps) {
         cy="25"
         r="20"
         fill="none"
-        strokeWidth="5"
+        strokeWidth={strokeWidth}
         style={{ stroke: color || 'currentColor', strokeLinecap: 'square' }}
       ></circle>
     </svg>
