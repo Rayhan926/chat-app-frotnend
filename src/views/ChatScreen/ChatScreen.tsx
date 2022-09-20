@@ -5,13 +5,13 @@ import Message from './components/Message';
 import SendMessageInput from './components/SendMessageInput';
 
 const ChatScreen = () => {
-  const { chats, isLoading, isError, isIdle } = useChats();
+  const { chats, isLoading, isError, isIdle, organizeChats } = useChats();
 
   return (
     <div className="h-full flex flex-col">
       <Header />
       <div
-        className="__px grow space-y-0.5 overflow-y-auto py-4 pb-2 scrollbar-none scroll-smooth"
+        className="__px grow space-y-3 overflow-y-auto py-4 pb-2 scrollbar-none scroll-smooth"
         id="messages_wrapper"
       >
         {isLoading || isIdle ? (
@@ -19,7 +19,17 @@ const ChatScreen = () => {
         ) : isError ? (
           'Error'
         ) : (
-          chats.map((chat) => <Message {...chat} key={chat._id} />)
+          <>
+            {organizeChats(chats).map((chatBlocks, index) => {
+              return (
+                <div key={index} className="space-y-0.5">
+                  {chatBlocks.map((chat) => (
+                    <Message {...chat} key={chat._id} />
+                  ))}
+                </div>
+              );
+            })}
+          </>
         )}
       </div>
       <SendMessageInput />

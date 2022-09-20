@@ -5,6 +5,7 @@ import { Chat } from '@types';
 import { scrollChatScreenToBottom } from '@utils';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
+import { useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
 import useConversations from './useConversations';
 
@@ -26,6 +27,33 @@ const useChats = () => {
       },
     },
   );
+
+  const organizeChats = useCallback((__chats: Chat[]) => {
+    const organizedChats: Chat[][] = [];
+    let temporaryChats: Chat[] = [];
+    let lastChat: Chat | null = null;
+
+    __chats.forEach((chat) => {
+      if (!lastChat || temporaryChats.length <= 0) {
+        temporaryChats.push(chat);
+        lastChat = chat;
+        return;
+      }
+
+      if (chat.senderId === lastChat.senderId) {
+        temporaryChats.push(chat);
+        lastChat = chat;
+      } else {
+        organizedChats.push(temporaryChats);
+        temporaryChats = [];
+        temporaryChats.push(chat);
+        lastChat = chat;
+      }
+    });
+    organizedChats.push(temporaryChats);
+
+    return organizedChats;
+  }, []);
 
   const addChat = (chat: Chat) => {
     setChats((prevChats) => [
@@ -53,11 +81,24 @@ const useChats = () => {
     );
   };
 
+  useEffect(() => {
+    if (chats.length === 1) {
+      document
+        .querySelectorAll('.__message_wrapper')[0]
+        .classList.add('__last');
+    } else {
+      document
+        .querySelectorAll('.__message_wrapper')
+        .forEach((e) => e.classList.remove('__last'));
+    }
+  }, [chats]);
+
   return {
     chats,
     addChat,
     replaceChat,
     updateChat,
+    organizeChats,
     ...query,
   };
 };
