@@ -51,7 +51,7 @@ const Message = ({
       >
         {/** Attachments Preview --Start-- */}
         {hasAttachments && (
-          <div className="relative">
+          <div className="relative overflow-hidden">
             {isSending && (
               <MessageUploadProgressIndicatior percentage={uploadProgress} />
             )}
@@ -70,7 +70,10 @@ const Message = ({
                 <div
                   className={cx(
                     'single_attachment bg-white overflow-hidden [&>span]:!block',
-                    isMe ? 'rounded-l-[10px]' : 'rounded-r-[10px]',
+                    // isMe ? 'rounded-l-[10px]' : 'rounded-r-[10px]',
+                    isMe
+                      ? 'first:rounded-tl-[10px] last:rounded-bl-[10px]'
+                      : 'first:rounded-tr-[10px] last:rounded-br-[10px]',
                   )}
                   key={attachment._id}
                 >
@@ -81,6 +84,7 @@ const Message = ({
                     }
                     width={attachment.width}
                     height={attachment.height}
+                    objectFit="contain"
                     className="w-full"
                   />
                   {/* <img
@@ -101,7 +105,7 @@ const Message = ({
 
         <div
           className={cx(
-            message && 'pb-2 pt-1.5 pl-3 pr-2 text-sm whitespace-pre-wrap',
+            message && 'pb-2 pt-1.5 px-3 text-sm whitespace-pre-wrap',
           )}
         >
           {/** Text Message --Start-- */}
@@ -111,11 +115,11 @@ const Message = ({
           {/** Time And Message Status --Start-- */}
           <span
             className={cx(
-              'text-[10px] pl-2 inline-flex items-center gap-1',
-              !isMe && 'text-dark-800',
+              'message_time_and_status_overlay text-[10px] pl-2 inline-flex items-center gap-1 pb-1',
+              !isMe ? 'text-dark-800 rounded-br-[10px]' : 'rounded-bl-[10px]',
               !message
-                ? 'absolute z-10 bottom-[3px] left-[3px] w-[calc(100%-6px)] pr-2 pb-1 pt-2 bg-gradient-to-t from-black/60 to-transparent rounded-b-[10px] flex justify-end !text-white'
-                : 'translate-y-1 float-right',
+                ? 'absolute z-10 bottom-[3px] left-[3px] w-[calc(100%-6px)] pr-2 pb-1 pt-2 bg-gradient-to-t from-black/60 to-transparent flex justify-end !text-white'
+                : 'float-right translate-y-1',
             )}
           >
             <span>{moment(createdAt).format('HH:mm A')}</span>

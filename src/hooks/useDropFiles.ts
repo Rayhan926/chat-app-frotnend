@@ -5,10 +5,10 @@ import { filesAtom } from '@atoms';
 import { FileWithAdditionalFields } from '@types';
 import { getHeightAndWidthFromDataUrl } from '@utils';
 import { useAtom } from 'jotai';
-import { useDropzone } from 'react-dropzone';
+import { DropzoneOptions, useDropzone } from 'react-dropzone';
 import { v4 as uuid } from 'uuid';
 
-const useDropFiles = () => {
+const useDropFiles = (options?: DropzoneOptions | undefined) => {
   const [files, setFiles] = useAtom(filesAtom);
 
   const withAdditionalFields: FileWithAdditionalFields[] = [];
@@ -42,6 +42,7 @@ const useDropFiles = () => {
     accept: {
       'image/*': [],
     },
+    ...options,
   });
   return { ...dropzone, files, setFiles, removeFile };
 };

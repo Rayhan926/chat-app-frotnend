@@ -6,3 +6,10 @@ export const USER_KEY = 'user';
 export const colors = {
   primary: '#016AFD',
 };
+
+export const tabsInfo = [
+  {
+    title: 'People',
+    url: '/requests',
+  },
+];

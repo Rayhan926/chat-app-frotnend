@@ -1,3 +1,4 @@
+import { tabsInfo } from '@config/constants';
 import classNames from 'classnames';
 import Cookies from 'universal-cookie';
 
@@ -41,3 +42,9 @@ export const getHeightAndWidthFromDataUrl = async (file: any) =>
       });
     };
   });
+
+export const getTabTitle = (url: string) => {
+  const tab = tabsInfo.find((tabInfo) => tabInfo.url === url);
+
+  return tab?.title || 'Inbox';
+};

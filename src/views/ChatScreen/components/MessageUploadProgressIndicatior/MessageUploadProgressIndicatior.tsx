@@ -8,7 +8,7 @@ const MessageUploadProgressIndicatior = ({
   percentage,
 }: MessageUploadProgressIndicatiorProps) => {
   return (
-    <div className="absolute rounded-xl overflow-hidden top-0 left-0 w-full h-full bg-dark-900/50 flex justify-center items-center text-white z-50">
+    <div className="upload_progress_overly absolute overflow-hidden top-0 left-0 w-full h-full bg-dark-900/50 flex justify-center items-center text-white z-50">
       <div className="w-[50px]">
         {percentage === null ? (
           <CircularProgress strokeWidth={3} className="text-white" size={50} />

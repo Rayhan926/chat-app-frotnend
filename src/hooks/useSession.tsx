@@ -87,7 +87,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Logout
   const logout = useCallback(() => {
-    cookies.remove(TOKEN_KEY);
+    cookies.remove(TOKEN_KEY, {
+      path: '/',
+    });
     setAccessToken(null);
 
     router.push('/login').then(() => {

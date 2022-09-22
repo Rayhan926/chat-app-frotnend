@@ -128,7 +128,10 @@ em-emoji-picker {
 .__its_me:last-child > div {
   @apply rounded-br-xl;
 }
-.__its_me:last-child > div .single_attachment {
+.__its_me:last-child > div .single_attachment:last-child {
+  @apply rounded-br-[10px];
+}
+.__its_me:last-child .message_time_and_status_overlay {
   @apply rounded-br-[10px];
 }
 
@@ -139,9 +142,13 @@ em-emoji-picker {
 .__its_not_me:last-child > div {
   @apply rounded-bl-xl;
 }
-.__its_not_me:last-child > div .single_attachment {
-  @apply rounded-bl-[10px];
-}
 .__its_not_me:first-child > div .single_attachment {
   @apply rounded-tl-[10px];
+}
+.__its_not_me:last-child > div .single_attachment:last-child {
+  @apply rounded-bl-[10px];
+}
+
+.__its_not_me:last-child .message_time_and_status_overlay {
+  @apply rounded-bl-[10px];
 }
