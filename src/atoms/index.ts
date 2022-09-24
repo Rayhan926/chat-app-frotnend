@@ -5,8 +5,10 @@ import {
   FileWithAdditionalFields,
   MessageInputType,
   ToastAtomType,
+  UploadOnProgress,
 } from '@types';
 import { atom, useAtom } from 'jotai';
+import { Socket } from 'socket.io-client';
 
 const sendFriendRequesDrawerAtom = atom(false);
 export const useOpenFriendRequestDrawer = () =>
@@ -22,3 +24,5 @@ export const messageInputAtom = atom<MessageInputType>({
 });
 
 export const filesAtom = atom<FileWithAdditionalFields[]>([]);
+export const uploadOnProgeressAtom = atom<UploadOnProgress[]>([]);
+export const socketAtom = atom<Socket | null>(null);

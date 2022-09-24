@@ -55,31 +55,48 @@ const useChats = () => {
     return organizedChats;
   }, []);
 
-  const addChat = (chat: Chat) => {
-    setChats((prevChats) => [
-      ...prevChats,
-      {
-        status: 'sending',
-        createdAt: Date.now() as unknown as Date,
-        uploadProgress: null,
-        ...chat,
-      },
-    ]);
-  };
+  const addChat = useCallback(
+    (chat: Chat, scroll?: boolean) => {
+      setChats((prevChats) => [
+        ...prevChats,
+        {
+          status: 'sending',
+          createdAt: Date.now() as unknown as Date,
+          uploadProgress: null,
+          ...chat,
+        },
+      ]);
 
-  const updateChat = (id: string, data: {}) => {
-    setChats((prevChats) =>
-      prevChats.map((chat) => (chat._id === id ? { ...chat, ...data } : chat)),
-    );
-  };
+      if (scroll) {
+        setTimeout(() => {
+          scrollChatScreenToBottom();
+        }, 20);
+      }
+    },
+    [setChats],
+  );
 
-  const replaceChat = (ordinaryId: string, newChatData: Chat) => {
-    setChats((prevChats) =>
-      prevChats.map((chat) =>
-        chat._id === ordinaryId ? { ...chat, ...newChatData } : chat,
-      ),
-    );
-  };
+  const updateChat = useCallback(
+    (id: string, data: {}) => {
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat._id === id ? { ...chat, ...data } : chat,
+        ),
+      );
+    },
+    [setChats],
+  );
+
+  const replaceChat = useCallback(
+    (ordinaryId: string, newChatData: Chat) => {
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat._id === ordinaryId ? { ...chat, ...newChatData } : chat,
+        ),
+      );
+    },
+    [setChats],
+  );
 
   useEffect(() => {
     if (chats.length === 1) {

@@ -16,6 +16,7 @@ import {
 } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import useConversations from './useConversations';
+import useSocket from './useSocket';
 import useToast from './useToast';
 
 const AuthContext = createContext<AuthContenxtValue>({
@@ -29,21 +30,32 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const { refetch } = useConversations();
   const router = useRouter();
   const { setToast } = useToast();
+  const { socket } = useSocket();
 
   // state
   const [localUser, setLocalUser] = useState<AuthUser | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  const setUserHandler = useCallback((user: AuthUser) => {
+    setLocalUser(user);
+    setLocal(USER_KEY, user);
+  }, []);
+
+  useEffect(() => {
+    if (localUser?._id) {
+      socket?.emit('join', localUser?._id);
+    }
+  }, [localUser, socket]);
 
   // Login
   const login = useCallback(
     ({ token, user }: Login) => {
       cookies.set(TOKEN_KEY, token, { path: '/' });
       setAccessToken(token);
-      setLocalUser(user);
-      setLocal(USER_KEY, user);
+      setUserHandler(user);
       router.push('/');
     },
-    [router],
+    [router, setUserHandler],
   );
 
   const mutateGoogleLogin = useMutation(
@@ -65,19 +77,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Fetching user info if it's not in local storage but has the access token in cookie
   useEffect(() => {
-    if (localUser) return;
-
-    const timeout = setTimeout(() => {
+    if (accessToken && !localUser) {
       client.get('/auth/get-user').then(({ data: { data } }) => {
-        setLocalUser(data);
-        setLocal(USER_KEY, data);
+        setUserHandler(data);
       });
-    }, 500);
-
-    return () => clearTimeout(timeout);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [localUser]);
+    }
+  }, [localUser, accessToken, setUserHandler]);
 
   // Setting access token to state after page mounted
   useEffect(() => {
@@ -97,23 +102,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       queryClient.removeQueries();
     });
   }, [router, queryClient]);
-
-  // Google Login
-  // const googleLogin = useCallback(
-  //   (tokenId: string) => {
-  //     client
-  //       .post('/auth/google-login', {
-  //         tokenId: `Bearer ${tokenId}`,
-  //       })
-  //       .then(({ data: { data } }) => {
-  //         login({
-  //           token: data.token,
-  //           user: data.user,
-  //         });
-  //       });
-  //   },
-  //   [login],
-  // );
 
   // Context value with useMemo
   const contextValue = useMemo<AuthContenxtValue>(() => {

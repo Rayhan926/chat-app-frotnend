@@ -77,7 +77,7 @@ export type Chat = {
   status?: 'sending' | 'error' | 'sent' | 'delivered' | 'seen';
   createdAt?: Date;
   attachments?: Attachments[];
-  uploadProgress?: number | null;
+  // uploadProgress?: number | null;
 };
 
 export type Conversation = ChatBoxProps & {
@@ -115,4 +115,9 @@ export type MessageInputType = {
 
 export type MessageUploadProgressIndicatiorProps = {
   percentage: number | null;
+};
+
+export type UploadOnProgress = {
+  id: string;
+  progress: number | null;
 };

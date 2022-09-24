@@ -6,6 +6,7 @@ import type { AppProps } from 'next/app';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
+
 import '../styles/globals.css';
 
 const queryClient = new QueryClient({

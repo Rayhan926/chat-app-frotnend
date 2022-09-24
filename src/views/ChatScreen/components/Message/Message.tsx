@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import useSession from '@hooks/useSession';
+import useUploadOnProgress from '@hooks/useUploadOnProgress';
 import { Chat } from '@types';
 import { cx, getFullPath } from '@utils';
 import moment from 'moment';
@@ -23,10 +24,9 @@ const Message = ({
   status,
   createdAt,
   attachments = [],
-  uploadProgress = null,
 }: Chat) => {
   const { session } = useSession();
-
+  const { progressInfo } = useUploadOnProgress(_id);
   const isMe = senderId === session?.user?._id;
   const isSending = status === 'sending';
   const isError = status === 'error';
@@ -53,7 +53,9 @@ const Message = ({
         {hasAttachments && (
           <div className="relative overflow-hidden">
             {isSending && (
-              <MessageUploadProgressIndicatior percentage={uploadProgress} />
+              <MessageUploadProgressIndicatior
+                percentage={progressInfo?.progress}
+              />
             )}
 
             <div

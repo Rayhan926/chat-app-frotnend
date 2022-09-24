@@ -7,6 +7,7 @@ import useMessageInput from '@hooks/useMessageInput';
 import useRandomId from '@hooks/useRandomId';
 import useSession from '@hooks/useSession';
 import useToast from '@hooks/useToast';
+import useUploadOnProgress from '@hooks/useUploadOnProgress';
 import { SendMessageType } from '@types';
 import { getErrorMsg, scrollChatScreenToBottom } from '@utils';
 import { useRouter } from 'next/router';
@@ -28,6 +29,7 @@ const SendMessageInput = () => {
   const { addChat, replaceChat, updateChat } = useChats();
   const { session } = useSession();
   const { setToast } = useToast();
+  const { addProgress } = useUploadOnProgress();
 
   const { user: receiverUser } = getUserInfo(router.query.id as string);
 
@@ -42,10 +44,18 @@ const SendMessageInput = () => {
           ).toFixed(2);
 
           const toNumber = parseInt(uploadProgress, 10);
-          updateChat(randomId, { uploadProgress: toNumber });
+          // updateChat(randomId, { uploadProgress: toNumber });
+          addProgress({
+            id: randomId,
+            progress: toNumber,
+          });
           if (toNumber === 100) {
             setTimeout(() => {
-              updateChat(randomId, { uploadProgress: null });
+              // updateChat(randomId, { uploadProgress: null });
+              addProgress({
+                id: randomId,
+                progress: null,
+              });
             }, 500);
           }
         },
