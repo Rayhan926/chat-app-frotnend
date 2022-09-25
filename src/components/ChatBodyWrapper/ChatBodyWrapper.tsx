@@ -18,6 +18,7 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
 
     const handler = () => {
       setSocket(socket);
+      console.log(socket.id);
     };
 
     socket.on('connect', handler);
@@ -28,6 +29,7 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
 
     return () => {
       socket.off('connect', handler);
+      socket.off('sendChat');
     };
   });
 
