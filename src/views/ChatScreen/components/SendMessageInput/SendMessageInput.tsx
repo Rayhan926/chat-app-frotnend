@@ -31,7 +31,7 @@ const SendMessageInput = () => {
   const { setToast } = useToast();
   const { addProgress } = useUploadOnProgress();
 
-  const { user: receiverUser } = getUserInfo(router.query.id as string);
+  const receiverUser = getUserInfo(router.query.id as string);
 
   // send message to the server mutation
   const { mutate } = useMutation(

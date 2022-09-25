@@ -8,7 +8,8 @@ import ConversationSkelenton from '@skelentons/ConversationSkelenton';
 import { useEffect } from 'react';
 
 const HomeScreen = () => {
-  const { isIdle, isLoading, data, isError, refetch } = useConversations();
+  const { isIdle, isLoading, conversations, isError, refetch } =
+    useConversations();
 
   useEffect(() => {
     if (!isIdle) return;
@@ -25,11 +26,11 @@ const HomeScreen = () => {
         [...Array(10).keys()].map((e) => <ConversationSkelenton key={e} />)
       ) : isError ? (
         <Error text="Failed to load conversations" />
-      ) : (data as any)?.length <= 0 ? (
+      ) : (conversations as any)?.length <= 0 ? (
         <NoData text="No Conversation Found" />
       ) : (
-        Array.isArray(data) &&
-        data.map((conversation) => (
+        Array.isArray(conversations) &&
+        conversations.map((conversation) => (
           <SingleConversation {...conversation} key={conversation._id} />
         ))
       )}

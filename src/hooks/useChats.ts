@@ -1,5 +1,5 @@
 /* eslint-disable no-confusing-arrow */
-import { chatsAtom } from '@atoms';
+import { activeConversationAtom, chatsAtom } from '@atoms';
 import { getChats } from '@client/queries';
 import { Chat } from '@types';
 import { scrollChatScreenToBottom } from '@utils';
@@ -11,9 +11,12 @@ import useConversations from './useConversations';
 
 const useChats = () => {
   const router = useRouter();
+  const [activeConversation, setActiveConversation] = useAtom(
+    activeConversationAtom,
+  );
   const [chats, setChats] = useAtom(chatsAtom);
   const { getUserInfo } = useConversations();
-  const { user } = getUserInfo(router.query.id as string);
+  const user = getUserInfo(router.query.id as string);
 
   const query = useQuery(
     `get-chats-${user?._id}`,
@@ -98,11 +101,17 @@ const useChats = () => {
     [setChats],
   );
 
+  const updateAllChatsStatusToSeen = useCallback(() => {
+    setChats((prevChats) =>
+      prevChats.map((chat) => ({ ...chat, status: 'seen' })),
+    );
+  }, [setChats]);
+
   useEffect(() => {
     if (chats.length === 1) {
       document
         .querySelectorAll('.__message_wrapper')[0]
-        .classList.add('__last');
+        ?.classList?.add('__last');
     } else {
       document
         .querySelectorAll('.__message_wrapper')
@@ -116,6 +125,9 @@ const useChats = () => {
     replaceChat,
     updateChat,
     organizeChats,
+    activeConversation,
+    setActiveConversation,
+    updateAllChatsStatusToSeen,
     ...query,
   };
 };

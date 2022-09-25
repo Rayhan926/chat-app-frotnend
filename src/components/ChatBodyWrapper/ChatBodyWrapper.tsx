@@ -1,37 +1,78 @@
 /* eslint-disable max-len */
 import useChats from '@hooks/useChats';
+import useConversations from '@hooks/useConversations';
 import useDropFiles from '@hooks/useDropFiles';
+import useSession from '@hooks/useSession';
 import useSocket from '@hooks/useSocket';
 import { Chat } from '@types';
 import { cx } from '@utils';
-import { ReactNode } from 'react';
-import { useEffectOnce } from 'react-use';
+import { ReactNode, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
 const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
   const { getRootProps, isDragActive } = useDropFiles({ noClick: true });
   const { setSocket } = useSocket();
-  const { addChat } = useChats();
+  const { session } = useSession();
+  const { addChat, activeConversation, updateAllChatsStatusToSeen } =
+    useChats();
+  const { updateConversation, getUserInfo, conversations } = useConversations();
 
-  useEffectOnce(() => {
+  useEffect(() => {
     const socket = io('http://localhost:8080');
 
     const handler = () => {
       setSocket(socket);
-      console.log(socket.id);
     };
 
     socket.on('connect', handler);
 
-    socket.on('sendChat', (chat: Chat) => {
-      addChat(chat, true);
+    socket.on('new-message', (chat: Chat) => {
+      if (activeConversation === chat.senderId) {
+        updateConversation(chat.senderId, {
+          lastMessage: chat,
+        });
+        addChat(chat, true);
+        socket.emit('saw-message', {
+          sawBy: session?.user?._id,
+          sawUserId: activeConversation,
+        });
+      } else {
+        updateConversation(chat.senderId, {
+          lastMessage: chat,
+          unseenMessageCount:
+            (getUserInfo(chat.senderId)?.unseenMessageCount || 0) + 1,
+        });
+      }
+    });
+
+    // socket.on('saw-message', (data) => {
+    //   console.log(data);
+    //   if (activeConversation === data?.sawBy) {
+    //     updateAllChatsStatusToSeen();
+    //   }
+    // });
+
+    socket.on('seen-messages', (data) => {
+      if (activeConversation === data?.seenBy) {
+        updateAllChatsStatusToSeen();
+      }
     });
 
     return () => {
       socket.off('connect', handler);
-      socket.off('sendChat');
+      socket.off('new-message');
+      socket.off('seen-messages');
+      socket.off('saw-message');
     };
-  });
+  }, [
+    activeConversation,
+    addChat,
+    setSocket,
+    updateAllChatsStatusToSeen,
+    updateConversation,
+    session?.user?._id,
+    conversations,
+  ]);
 
   return (
     <main

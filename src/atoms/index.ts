@@ -17,6 +17,7 @@ export const useOpenFriendRequestDrawer = () =>
 export const toastAtom = atom<ToastAtomType[]>([]);
 export const conversationsAtom = atom<Conversation[]>([]);
 export const chatsAtom = atom<Chat[]>([]);
+export const activeConversationAtom = atom<string | null>(null);
 export const friendRequestsAtom = atom<ChatBoxProps[]>([]);
 export const friendRequestsSentAtom = atom<ChatBoxProps[]>([]);
 export const messageInputAtom = atom<MessageInputType>({

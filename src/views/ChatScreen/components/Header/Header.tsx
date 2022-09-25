@@ -1,20 +1,37 @@
+import useChats from '@hooks/useChats';
 import useConversations from '@hooks/useConversations';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { FiChevronLeft } from 'react-icons/fi';
 import Skeleton from 'react-loading-skeleton';
+import { useQueryClient } from 'react-query';
 
 const Header = () => {
   const router = useRouter();
   const { getUserInfo } = useConversations();
+  const { setActiveConversation } = useChats();
+  const queryClient = useQueryClient();
 
-  const { user } = getUserInfo(router.query.id as string);
+  const user = getUserInfo(router.query.id as string);
+
+  useEffect(() => {
+    if (user) {
+      setActiveConversation(user._id);
+    }
+  }, [user, setActiveConversation]);
+
+  const goBackHandler = () => {
+    router.back();
+    setActiveConversation(null);
+    queryClient.removeQueries([`get-chats-${user?._id}`]);
+  };
 
   return (
     <div className="flex items-center __px shrink-0 py-4 gap-2 border-b border-dark-100">
       {/** Go back --Start-- */}
       <button
-        onClick={() => router.back()}
+        onClick={goBackHandler}
         className="w-9 h-9 rounded-full overflow-hidden flex justify-center items-center -ml-3 hover:bg-dark-100 text-primary"
       >
         <FiChevronLeft size={20} />
