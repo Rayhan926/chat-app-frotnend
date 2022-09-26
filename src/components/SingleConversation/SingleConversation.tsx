@@ -18,6 +18,7 @@ const SingleConversation = ({
   unseenMessageCount,
   status,
   _id,
+  isTyping,
 }: Conversation) => {
   const { setActiveConversation } = useChats();
   const { updateConversation } = useConversations();
@@ -65,36 +66,42 @@ const SingleConversation = ({
       {/** Avatar --End-- */}
 
       {/** Name and last message --Start-- */}
-      <div className="space-y-0.5">
+      <div className="space-y-0">
         <h3 className="font-semibold text-base text-dark-900 line-clamp-1">
           {name}
         </h3>
-        {lastMessage && (
-          <p className="text-[13px] leading-[13px] text-dark-800 inline-flex items-center gap-1 h-4 relative">
-            {isLastMessageMine && (
-              <MessageStatusIndicator
-                status={lastMessage.status}
-                seenClassName="text-primary"
-              />
-            )}
-            {hasAttachments && (
-              <span
-                className={cx(
-                  'inline text-dark-800 absolute top-0 left-0',
-                  isLastMessageMine ? 'left-4' : 'left-0',
-                )}
-              >
-                <IoCamera size={16} />
-              </span>
-            )}
-            <span className={cx(hasAttachments && 'pl-5')}>
-              {lastMessage.message
-                ? lastMessage.message
-                : hasAttachments
-                ? 'Photo'
-                : null}
-            </span>
+        {isTyping ? (
+          <p className="text-[13px] leading-[13px] inline-block text-primary h-4">
+            Typing..
           </p>
+        ) : (
+          lastMessage && (
+            <p className="text-[13px] leading-[13px] text-dark-800 inline-flex items-center gap-1 h-4 relative">
+              {isLastMessageMine && (
+                <MessageStatusIndicator
+                  status={lastMessage.status}
+                  seenClassName="text-primary"
+                />
+              )}
+              {hasAttachments && (
+                <span
+                  className={cx(
+                    'inline text-dark-800 absolute top-0 left-0',
+                    isLastMessageMine ? 'left-4' : 'left-0',
+                  )}
+                >
+                  <IoCamera size={16} />
+                </span>
+              )}
+              <span className={cx(hasAttachments && 'pl-5')}>
+                {lastMessage.message
+                  ? lastMessage.message
+                  : hasAttachments
+                  ? 'Photo'
+                  : null}
+              </span>
+            </p>
+          )
         )}
       </div>
       {/** Name and last message --End-- */}

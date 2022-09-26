@@ -5,7 +5,7 @@ import useDropFiles from '@hooks/useDropFiles';
 import useSession from '@hooks/useSession';
 import useSocket from '@hooks/useSocket';
 import { Chat } from '@types';
-import { cx } from '@utils';
+import { cx, scrollChatScreenToBottom } from '@utils';
 import { ReactNode, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
@@ -13,8 +13,13 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
   const { getRootProps, isDragActive } = useDropFiles({ noClick: true });
   const { setSocket, socket } = useSocket();
   const { session } = useSession();
-  const { addChat, activeConversation, updateAllChatsStatusToSeen } =
-    useChats();
+  const {
+    addChat,
+    activeConversation,
+    updateAllChatsStatusToSeen,
+    addTypingToChatList,
+    removeTypingFromChatList,
+  } = useChats();
   const { updateConversation, getUserInfo, conversations, updateTypingStatus } =
     useConversations();
 
@@ -68,6 +73,14 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
 
     socket.on('typing', (data) => {
       updateTypingStatus(data?.from || '', data?.typingStatus);
+      if (data?.from === activeConversation) {
+        if (data?.typingStatus) {
+          addTypingToChatList();
+          scrollChatScreenToBottom();
+        } else {
+          removeTypingFromChatList();
+        }
+      }
     });
 
     return () => {
@@ -87,6 +100,8 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
     getUserInfo,
     socket,
     updateTypingStatus,
+    addTypingToChatList,
+    removeTypingFromChatList,
   ]);
 
   return (

@@ -19,12 +19,27 @@ const Message = ({
   status,
   createdAt,
   attachments = [],
+  isTyping,
 }: Chat) => {
   const { session } = useSession();
   const { progressInfo } = useUploadOnProgress(_id);
   const isMe = senderId === session?.user?._id;
   const isSending = status === 'sending';
   const hasAttachments = attachments.length > 0;
+
+  if (isTyping) {
+    return (
+      <div
+        className={cx(isMe ? '__its_me' : '__its_not_me', 'max-w-[75%] w-fit')}
+      >
+        <div className="pb-3 pt-2.5 px-3 flex items-center justify-center gap-[3px] typing_dots_wrapper bg-dark-100 h-[34px] text-dark-900 rounded-r-xl rounded-l-[2px]">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

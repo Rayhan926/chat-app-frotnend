@@ -152,3 +152,30 @@ em-emoji-picker {
 .__its_not_me:last-child .message_time_and_status_overlay {
   @apply rounded-bl-[10px];
 }
+
+.typing_dots_wrapper > span {
+  @apply w-[5px] h-[5px] rounded-full bg-dark-700 block;
+  animation: typingDot 1.8s ease-in-out infinite;
+}
+
+.typing_dots_wrapper > span:first-child {
+  animation-delay: 200ms;
+}
+.typing_dots_wrapper > span:nth-child(2) {
+  animation-delay: 400ms;
+}
+.typing_dots_wrapper > span:last-child {
+  animation-delay: 600ms;
+}
+
+@keyframes typingDot {
+  0% {
+    transform: translateY(0px);
+  }
+  28% {
+    transform: translateY(-5px);
+  }
+  44% {
+    transform: translateY(0px);
+  }
+}

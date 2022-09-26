@@ -31,7 +31,7 @@ const SendMessageInput = () => {
   const { session } = useSession();
   const { setToast } = useToast();
   const { addProgress } = useUploadOnProgress();
-  const { trackIsTyping, cancelTyping } = useTyping();
+  const { cancelTyping, clearTimeOut } = useTyping();
 
   const receiverUser = getUserInfo(router.query.id as string);
 
@@ -66,7 +66,7 @@ const SendMessageInput = () => {
         const chat = data?.data?.data;
         replaceChat(randomId, chat);
         updateChat(randomId, { uploadProgress: null });
-
+        cancelTyping();
         updateConversation(receiverUser?._id || '', {
           lastMessage: chat,
         });
@@ -86,9 +86,7 @@ const SendMessageInput = () => {
       const hasMsgOrFiles = trimmedMsg || files.length > 0;
 
       if (!receiverUser?._id || !hasMsgOrFiles || !session?.user?._id) return;
-
-      cancelTyping();
-
+      clearTimeOut();
       addChat({
         _id: randomId,
         senderId: session?.user?._id,
@@ -157,7 +155,6 @@ const SendMessageInput = () => {
             value={message}
             id="message_input"
             onChange={(e) => {
-              trackIsTyping();
               setFieldValue('message', e.target.value);
             }}
             className="w-full resize-none outline-none py-2.5 px-3 text-dark-900 placeholder:text-dark-700 bg-transparent"

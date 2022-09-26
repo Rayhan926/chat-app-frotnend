@@ -7,13 +7,16 @@ import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
 import { useQuery } from 'react-query';
+import { v4 as uuid } from 'uuid';
 import useConversations from './useConversations';
+import useSession from './useSession';
 
 const useChats = () => {
   const router = useRouter();
   const [activeConversation, setActiveConversation] = useAtom(
     activeConversationAtom,
   );
+  const { session } = useSession();
   const [chats, setChats] = useAtom(chatsAtom);
   const { getUserInfo } = useConversations();
   const user = getUserInfo(router.query.id as string);
@@ -101,9 +104,30 @@ const useChats = () => {
     [setChats],
   );
 
+  const addTypingToChatList = useCallback(() => {
+    setChats((prevChats) => {
+      return [
+        ...prevChats,
+        {
+          _id: uuid(),
+          message: null,
+          isTyping: true,
+          senderId: activeConversation,
+          receiverId: session?.user?._id,
+        } as any,
+      ];
+    });
+  }, [activeConversation, session?.user?._id, setChats]);
+
+  const removeTypingFromChatList = useCallback(() => {
+    setChats((prevChats) => prevChats.filter((chat) => !chat?.isTyping));
+  }, [setChats]);
+
   const updateAllChatsStatusToSeen = useCallback(() => {
     setChats((prevChats) =>
-      prevChats.map((chat) => ({ ...chat, status: 'seen' })),
+      prevChats.map((chat) =>
+        chat.status !== 'seen' ? { ...chat, status: 'seen' } : chat,
+      ),
     );
   }, [setChats]);
 
@@ -123,11 +147,13 @@ const useChats = () => {
     chats,
     addChat,
     setChats,
-    replaceChat,
     updateChat,
+    replaceChat,
     organizeChats,
     activeConversation,
+    addTypingToChatList,
     setActiveConversation,
+    removeTypingFromChatList,
     updateAllChatsStatusToSeen,
     ...query,
   };

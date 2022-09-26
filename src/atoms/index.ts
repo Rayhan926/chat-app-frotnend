@@ -5,6 +5,7 @@ import {
   FileWithAdditionalFields,
   MessageInputType,
   ToastAtomType,
+  Typing,
   UploadOnProgress,
 } from '@types';
 import { atom, useAtom } from 'jotai';
@@ -27,4 +28,4 @@ export const messageInputAtom = atom<MessageInputType>({
 export const filesAtom = atom<FileWithAdditionalFields[]>([]);
 export const uploadOnProgeressAtom = atom<UploadOnProgress[]>([]);
 export const socketAtom = atom<Socket | null>(null);
-export const typingAtom = atom<boolean>(false);
+export const typingAtom = atom<Typing[]>([]);

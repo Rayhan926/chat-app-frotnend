@@ -56,7 +56,7 @@ const Header = () => {
                 {user?.name}
               </h3>
               <p className="text-[11px] text-green-600 capitalize">
-                {user?.isTyping ? 'Typing..' : user?.status}
+                {user?.status}
               </p>
             </>
           ) : (

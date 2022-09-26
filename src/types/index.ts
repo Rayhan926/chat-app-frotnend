@@ -78,7 +78,7 @@ export type Chat = {
   status?: MessageStatus;
   createdAt?: Date;
   attachments?: Attachments[];
-  // uploadProgress?: number | null;
+  isTyping?: boolean;
 };
 
 export type Conversation = ChatBoxProps & {
@@ -127,4 +127,8 @@ export type UploadOnProgress = {
 export type MessageStatusIndicatorProps = {
   status?: MessageStatus;
   seenClassName?: string;
+};
+
+export type Typing = {
+  userId: string;
 };
