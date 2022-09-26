@@ -7,6 +7,7 @@ import useMessageInput from '@hooks/useMessageInput';
 import useRandomId from '@hooks/useRandomId';
 import useSession from '@hooks/useSession';
 import useToast from '@hooks/useToast';
+import useTyping from '@hooks/useTyping';
 import useUploadOnProgress from '@hooks/useUploadOnProgress';
 import { SendMessageType } from '@types';
 import { getErrorMsg, scrollChatScreenToBottom } from '@utils';
@@ -24,12 +25,13 @@ const SendMessageInput = () => {
   const router = useRouter();
   const { randomId, refresh } = useRandomId();
   const { message, setFieldValue } = useMessageInput();
-  const { getUserInfo } = useConversations();
+  const { getUserInfo, updateConversation } = useConversations();
   const { files, setFiles } = useDropFiles();
   const { addChat, replaceChat, updateChat } = useChats();
   const { session } = useSession();
   const { setToast } = useToast();
   const { addProgress } = useUploadOnProgress();
+  const { trackIsTyping, cancelTyping } = useTyping();
 
   const receiverUser = getUserInfo(router.query.id as string);
 
@@ -44,14 +46,13 @@ const SendMessageInput = () => {
           ).toFixed(2);
 
           const toNumber = parseInt(uploadProgress, 10);
-          // updateChat(randomId, { uploadProgress: toNumber });
+
           addProgress({
             id: randomId,
             progress: toNumber,
           });
           if (toNumber === 100) {
             setTimeout(() => {
-              // updateChat(randomId, { uploadProgress: null });
               addProgress({
                 id: randomId,
                 progress: null,
@@ -62,8 +63,13 @@ const SendMessageInput = () => {
       }),
     {
       onSuccess: (data) => {
-        replaceChat(randomId, data.data.data);
+        const chat = data?.data?.data;
+        replaceChat(randomId, chat);
         updateChat(randomId, { uploadProgress: null });
+
+        updateConversation(receiverUser?._id || '', {
+          lastMessage: chat,
+        });
       },
       onError: (err) => {
         setToast({ message: getErrorMsg(err) });
@@ -80,6 +86,8 @@ const SendMessageInput = () => {
       const hasMsgOrFiles = trimmedMsg || files.length > 0;
 
       if (!receiverUser?._id || !hasMsgOrFiles || !session?.user?._id) return;
+
+      cancelTyping();
 
       addChat({
         _id: randomId,
@@ -128,6 +136,7 @@ const SendMessageInput = () => {
       refresh,
       session?.user?._id,
       setFieldValue,
+      cancelTyping,
     ],
   );
 
@@ -148,6 +157,7 @@ const SendMessageInput = () => {
             value={message}
             id="message_input"
             onChange={(e) => {
+              trackIsTyping();
               setFieldValue('message', e.target.value);
             }}
             className="w-full resize-none outline-none py-2.5 px-3 text-dark-900 placeholder:text-dark-700 bg-transparent"

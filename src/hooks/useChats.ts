@@ -122,6 +122,7 @@ const useChats = () => {
   return {
     chats,
     addChat,
+    setChats,
     replaceChat,
     updateChat,
     organizeChats,

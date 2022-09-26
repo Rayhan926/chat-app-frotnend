@@ -5,13 +5,11 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { FiChevronLeft } from 'react-icons/fi';
 import Skeleton from 'react-loading-skeleton';
-import { useQueryClient } from 'react-query';
 
 const Header = () => {
   const router = useRouter();
   const { getUserInfo } = useConversations();
-  const { setActiveConversation } = useChats();
-  const queryClient = useQueryClient();
+  const { setActiveConversation, setChats } = useChats();
 
   const user = getUserInfo(router.query.id as string);
 
@@ -24,7 +22,7 @@ const Header = () => {
   const goBackHandler = () => {
     router.back();
     setActiveConversation(null);
-    queryClient.removeQueries([`get-chats-${user?._id}`]);
+    setChats([]);
   };
 
   return (
@@ -58,7 +56,7 @@ const Header = () => {
                 {user?.name}
               </h3>
               <p className="text-[11px] text-green-600 capitalize">
-                {user?.status}
+                {user?.isTyping ? 'Typing..' : user?.status}
               </p>
             </>
           ) : (

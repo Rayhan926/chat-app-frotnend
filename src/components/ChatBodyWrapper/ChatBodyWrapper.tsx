@@ -11,20 +11,28 @@ import { io } from 'socket.io-client';
 
 const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
   const { getRootProps, isDragActive } = useDropFiles({ noClick: true });
-  const { setSocket } = useSocket();
+  const { setSocket, socket } = useSocket();
   const { session } = useSession();
   const { addChat, activeConversation, updateAllChatsStatusToSeen } =
     useChats();
-  const { updateConversation, getUserInfo, conversations } = useConversations();
+  const { updateConversation, getUserInfo, conversations, updateTypingStatus } =
+    useConversations();
 
   useEffect(() => {
-    const socket = io('http://localhost:8080');
+    const _socket = io('http://localhost:8080');
 
     const handler = () => {
-      setSocket(socket);
+      setSocket(_socket);
     };
+    _socket.on('connect', handler);
 
-    socket.on('connect', handler);
+    return () => {
+      _socket.off('connect', handler);
+    };
+  }, [setSocket]);
+
+  useEffect(() => {
+    if (!socket) return;
 
     socket.on('new-message', (chat: Chat) => {
       if (activeConversation === chat.senderId) {
@@ -45,24 +53,28 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
       }
     });
 
-    // socket.on('saw-message', (data) => {
-    //   console.log(data);
-    //   if (activeConversation === data?.sawBy) {
-    //     updateAllChatsStatusToSeen();
-    //   }
-    // });
-
     socket.on('seen-messages', (data) => {
       if (activeConversation === data?.seenBy) {
         updateAllChatsStatusToSeen();
+      } else {
+        updateConversation(data?.seenBy, {
+          lastMessage: {
+            ...getUserInfo(data?.seenBy)?.lastMessage,
+            status: 'seen',
+          },
+        });
       }
     });
 
+    socket.on('typing', (data) => {
+      updateTypingStatus(data?.from || '', data?.typingStatus);
+    });
+
     return () => {
-      socket.off('connect', handler);
       socket.off('new-message');
       socket.off('seen-messages');
       socket.off('saw-message');
+      socket.off('typing');
     };
   }, [
     activeConversation,
@@ -72,6 +84,9 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
     updateConversation,
     session?.user?._id,
     conversations,
+    getUserInfo,
+    socket,
+    updateTypingStatus,
   ]);
 
   return (

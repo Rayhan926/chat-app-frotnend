@@ -15,13 +15,16 @@ const useConversations = () => {
     },
   });
 
-  const getUserInfo = (usernameOrId: string) => {
-    return conversations.find(
-      (conversation) =>
-        conversation.username === usernameOrId ||
-        conversation._id === usernameOrId,
-    );
-  };
+  const getUserInfo = useCallback(
+    (usernameOrId: string) => {
+      return conversations.find(
+        (conversation) =>
+          conversation.username === usernameOrId ||
+          conversation._id === usernameOrId,
+      );
+    },
+    [conversations],
+  );
 
   const updateConversation = useCallback(
     (conversationId: string, updatedConversation: any) => {
@@ -41,9 +44,19 @@ const useConversations = () => {
     [setConversations],
   );
 
+  const updateTypingStatus = useCallback(
+    (conversationId: string, typingStatus: boolean) => {
+      updateConversation(conversationId, {
+        isTyping: typingStatus,
+      });
+    },
+    [],
+  );
+
   return {
     getUserInfo,
     updateConversation,
+    updateTypingStatus,
     ...query,
     conversations,
   };

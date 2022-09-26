@@ -1,6 +1,8 @@
 /* eslint-disable indent */
+import MessageStatusIndicator from '@components/MessageStatusIndicator';
 import useChats from '@hooks/useChats';
 import useConversations from '@hooks/useConversations';
+import useSession from '@hooks/useSession';
 import { Conversation } from '@types';
 import { cx } from '@utils';
 import moment from 'moment';
@@ -22,6 +24,9 @@ const SingleConversation = ({
   const isOnline = status === 'online';
   const hasAttachments = (lastMessage as any)?.attachments?.length > 0;
   const router = useRouter();
+  const { session } = useSession();
+  // console.log(lastMessage, name);
+  const isLastMessageMine = lastMessage?.senderId === session?.user?._id;
 
   const onConversationClick = () => {
     setActiveConversation(_id);
@@ -66,13 +71,23 @@ const SingleConversation = ({
         </h3>
         {lastMessage && (
           <p className="text-[13px] leading-[13px] text-dark-800 inline-flex items-center gap-1 h-4 relative">
+            {isLastMessageMine && (
+              <MessageStatusIndicator
+                status={lastMessage.status}
+                seenClassName="text-primary"
+              />
+            )}
             {hasAttachments && (
-              <span className="inline text-dark-800 absolute top-0 left-0">
+              <span
+                className={cx(
+                  'inline text-dark-800 absolute top-0 left-0',
+                  isLastMessageMine ? 'left-4' : 'left-0',
+                )}
+              >
                 <IoCamera size={16} />
               </span>
             )}
             <span className={cx(hasAttachments && 'pl-5')}>
-              {/* Photo Hello World */}
               {lastMessage.message
                 ? lastMessage.message
                 : hasAttachments

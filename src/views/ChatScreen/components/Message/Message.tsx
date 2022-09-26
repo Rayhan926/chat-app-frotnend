@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import MessageStatusIndicator from '@components/MessageStatusIndicator';
 import useSession from '@hooks/useSession';
 import useUploadOnProgress from '@hooks/useUploadOnProgress';
 import { Chat } from '@types';
@@ -6,12 +7,6 @@ import { cx, getFullPath } from '@utils';
 import moment from 'moment';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { BiErrorAlt } from 'react-icons/bi';
-import {
-  IoCheckmarkDoneSharp,
-  IoCheckmarkSharp,
-  IoEllipsisHorizontalSharp,
-} from 'react-icons/io5';
 
 const MessageUploadProgressIndicatior = dynamic(
   () => import('../MessageUploadProgressIndicatior'),
@@ -29,10 +24,6 @@ const Message = ({
   const { progressInfo } = useUploadOnProgress(_id);
   const isMe = senderId === session?.user?._id;
   const isSending = status === 'sending';
-  const isError = status === 'error';
-  const isSent = status === 'sent';
-  const isDelivered = status === 'delivered';
-  const isSeen = status === 'seen';
   const hasAttachments = attachments.length > 0;
 
   return (
@@ -126,27 +117,7 @@ const Message = ({
           >
             <span>{moment(createdAt).format('HH:mm A')}</span>
 
-            {isMe && (
-              <span className="w-3 inline">
-                {isSending ? (
-                  <IoEllipsisHorizontalSharp
-                    size={12}
-                    className="animate-pulse"
-                  />
-                ) : isError ? (
-                  <BiErrorAlt size={12} />
-                ) : isSent ? (
-                  <IoCheckmarkSharp size={12} />
-                ) : isDelivered || isSeen ? (
-                  <IoCheckmarkDoneSharp
-                    size={12}
-                    className={cx(isDelivered && 'opacity-50')}
-                  />
-                ) : (
-                  <BiErrorAlt size={12} />
-                )}
-              </span>
-            )}
+            {isMe && <MessageStatusIndicator status={status} />}
           </span>
           {/** Time And Message Status --End-- */}
         </div>

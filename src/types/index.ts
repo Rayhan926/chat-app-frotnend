@@ -69,12 +69,13 @@ type Attachments = {
   mimetype?: string;
 } & FileWithAdditionalFields;
 
+type MessageStatus = 'sending' | 'error' | 'sent' | 'delivered' | 'seen';
 export type Chat = {
   _id: string;
   senderId: string;
   receiverId?: string;
   message: string;
-  status?: 'sending' | 'error' | 'sent' | 'delivered' | 'seen';
+  status?: MessageStatus;
   createdAt?: Date;
   attachments?: Attachments[];
   // uploadProgress?: number | null;
@@ -83,6 +84,7 @@ export type Chat = {
 export type Conversation = ChatBoxProps & {
   lastMessage: Chat | null;
   unseenMessageCount: number;
+  isTyping?: boolean;
 };
 
 export type SendMessageType = {
@@ -120,4 +122,9 @@ export type MessageUploadProgressIndicatiorProps = {
 export type UploadOnProgress = {
   id: string;
   progress: number | null;
+};
+
+export type MessageStatusIndicatorProps = {
+  status?: MessageStatus;
+  seenClassName?: string;
 };
