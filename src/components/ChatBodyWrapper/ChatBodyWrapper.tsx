@@ -4,6 +4,8 @@ import useConversations from '@hooks/useConversations';
 import useDropFiles from '@hooks/useDropFiles';
 import useSession from '@hooks/useSession';
 import useSocket from '@hooks/useSocket';
+import useToggle from '@hooks/useToggle';
+import useTyping from '@hooks/useTyping';
 import { Chat } from '@types';
 import { cx, scrollChatScreenToBottom } from '@utils';
 import { ReactNode, useEffect } from 'react';
@@ -13,6 +15,8 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
   const { getRootProps, isDragActive } = useDropFiles({ noClick: true });
   const { setSocket, socket } = useSocket();
   const { session } = useSession();
+  const { toggle } = useToggle();
+
   const {
     addChat,
     activeConversation,
@@ -20,11 +24,14 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
     addTypingToChatList,
     removeTypingFromChatList,
   } = useChats();
+
   const { updateConversation, getUserInfo, conversations, updateTypingStatus } =
     useConversations();
 
+  const { cancelTyping } = useTyping();
+
   useEffect(() => {
-    const _socket = io('http://localhost:8080');
+    const _socket = io(process.env.NEXT_PUBLIC_API_BASE_URL!);
 
     const handler = () => {
       setSocket(_socket);
@@ -34,7 +41,7 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
     return () => {
       _socket.off('connect', handler);
     };
-  }, [setSocket]);
+  }, [setSocket, toggle]);
 
   useEffect(() => {
     if (!socket) return;
@@ -83,11 +90,29 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
       }
     });
 
+    socket.on('cancelTyping', cancelTyping);
+
+    socket.on('user-online', (data) => {
+      updateConversation(data.userId, {
+        status: 'online',
+      });
+    });
+
+    socket.on('user-offline', (data) => {
+      updateConversation(data?.userId, {
+        status: 'offline',
+        lastSeen: data?.lastSeen,
+      });
+    });
+
     return () => {
       socket.off('new-message');
       socket.off('seen-messages');
       socket.off('saw-message');
       socket.off('typing');
+      socket.off('cancelTyping');
+      socket.off('user-online');
+      socket.off('user-offline');
     };
   }, [
     activeConversation,
@@ -102,6 +127,7 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
     updateTypingStatus,
     addTypingToChatList,
     removeTypingFromChatList,
+    cancelTyping,
   ]);
 
   return (

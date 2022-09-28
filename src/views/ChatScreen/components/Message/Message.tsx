@@ -95,15 +95,6 @@ const Message = ({
                     objectFit="contain"
                     className="w-full"
                   />
-                  {/* <img
-                  alt=""
-                  src={
-                    attachment?.preview || getFullPath(attachment?.path || '')
-                  }
-                  // width={attachment.width}
-                  // height={attachment.height}
-                  className="w-full"
-                /> */}
                 </div>
               ))}
             </div>

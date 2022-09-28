@@ -76,7 +76,7 @@ const SingleConversation = ({
           </p>
         ) : (
           lastMessage && (
-            <p className="text-[13px] leading-[13px] text-dark-800 inline-flex items-center gap-1 h-4 relative">
+            <p className="text-[13px] leading-[13px] text-dark-800 inline-flex items-center gap-1 h-4 relative line-clamp-1">
               {isLastMessageMine && (
                 <MessageStatusIndicator
                   status={lastMessage.status}

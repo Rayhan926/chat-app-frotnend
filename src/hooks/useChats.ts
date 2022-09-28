@@ -76,7 +76,7 @@ const useChats = () => {
       if (scroll) {
         setTimeout(() => {
           scrollChatScreenToBottom();
-        }, 20);
+        }, 80);
       }
     },
     [setChats],

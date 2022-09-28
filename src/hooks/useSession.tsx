@@ -18,6 +18,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import useConversations from './useConversations';
 import useSocket from './useSocket';
 import useToast from './useToast';
+import useToggle from './useToggle';
 
 const AuthContext = createContext<AuthContenxtValue>({
   session: null,
@@ -31,6 +32,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const { setToast } = useToast();
   const { socket } = useSocket();
+  const { toggleState } = useToggle();
 
   // state
   const [localUser, setLocalUser] = useState<AuthUser | null>(null);
@@ -42,10 +44,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   useEffect(() => {
-    if (localUser?._id) {
-      socket?.emit('join', localUser?._id);
+    if (localUser?._id && accessToken) {
+      socket?.emit('join', {
+        id: localUser?._id,
+        token: `Bearer ${accessToken}`,
+      });
     }
-  }, [localUser, socket]);
+  }, [localUser, socket, accessToken]);
 
   // Login
   const login = useCallback(
@@ -96,12 +101,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       path: '/',
     });
     setAccessToken(null);
+    socket?.disconnect();
+    toggleState();
 
     router.push('/login').then(() => {
       removeBoth(USER_KEY);
       queryClient.removeQueries();
     });
-  }, [router, queryClient]);
+  }, [router, queryClient, socket, toggleState]);
 
   // Context value with useMemo
   const contextValue = useMemo<AuthContenxtValue>(() => {

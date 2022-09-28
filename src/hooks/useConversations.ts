@@ -50,7 +50,7 @@ const useConversations = () => {
         isTyping: typingStatus,
       });
     },
-    [],
+    [updateConversation],
   );
 
   return {

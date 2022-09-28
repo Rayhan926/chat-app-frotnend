@@ -134,7 +134,7 @@ const SendMessageInput = () => {
       refresh,
       session?.user?._id,
       setFieldValue,
-      cancelTyping,
+      clearTimeOut,
     ],
   );
 

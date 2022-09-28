@@ -24,7 +24,7 @@ const MessageStatusIndicator = ({
       ) : isError ? (
         <BiErrorAlt size={12} />
       ) : isSent ? (
-        <IoCheckmarkSharp size={12} />
+        <IoCheckmarkSharp size={12} className="opacity-50" />
       ) : isDelivered || isSeen ? (
         <IoCheckmarkDoneSharp
           size={12}

@@ -1,5 +1,6 @@
 import useChats from '@hooks/useChats';
 import useConversations from '@hooks/useConversations';
+import moment from 'moment';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -55,9 +56,16 @@ const Header = () => {
               <h3 className="text-sm font-semibold text-dark-900">
                 {user?.name}
               </h3>
-              <p className="text-[11px] text-green-600 capitalize">
-                {user?.status}
-              </p>
+              {user?.status === 'online' ? (
+                <p className="text-[11px] text-green-600 capitalize">
+                  {user?.status}
+                </p>
+              ) : (
+                <p className="text-[11px] text-dark-700">
+                  Last seen{' '}
+                  {user?.lastSeen ? moment(user?.lastSeen).fromNow() : 'Nan'}
+                </p>
+              )}
             </>
           ) : (
             <>

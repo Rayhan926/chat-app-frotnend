@@ -54,6 +54,7 @@ export type ChatBoxProps = {
   avatar?: string;
   username: string;
   status: 'online' | 'offline';
+  lastSeen: Date | null;
 };
 
 export type FileWithAdditionalFields = File & {

@@ -13,6 +13,7 @@ const useTyping = () => {
   const { message } = useMessageInput();
 
   const clearTimeOut = useCallback(() => {
+    console.log('cleared');
     clearTimeout(timeout);
     timeout = null;
   }, []);
@@ -48,6 +49,7 @@ const useTyping = () => {
 
     timeout = setTimeout(() => {
       cancelTyping();
+      console.log('first');
     }, 1500);
   }, [message, cancelTyping, activeConversation, session, socket]);
 
