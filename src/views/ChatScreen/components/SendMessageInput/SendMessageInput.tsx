@@ -35,7 +35,6 @@ const SendMessageInput = () => {
 
   const receiverUser = getUserInfo(router.query.id as string);
 
-  // send message to the server mutation
   const { mutate } = useMutation(
     (sendMessageOptions: SendMessageType) =>
       client.post('/conversations/chat/send', sendMessageOptions, {
@@ -47,6 +46,10 @@ const SendMessageInput = () => {
 
           const toNumber = parseInt(uploadProgress, 10);
 
+          if (toNumber < 1) {
+            clearTimeOut();
+          }
+          // console.log(randomId, toNumber);
           addProgress({
             id: randomId,
             progress: toNumber,
@@ -86,7 +89,7 @@ const SendMessageInput = () => {
       const hasMsgOrFiles = trimmedMsg || files.length > 0;
 
       if (!receiverUser?._id || !hasMsgOrFiles || !session?.user?._id) return;
-      clearTimeOut();
+
       addChat({
         _id: randomId,
         senderId: session?.user?._id,
@@ -134,7 +137,6 @@ const SendMessageInput = () => {
       refresh,
       session?.user?._id,
       setFieldValue,
-      clearTimeOut,
     ],
   );
 

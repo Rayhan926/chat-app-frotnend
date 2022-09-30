@@ -58,7 +58,7 @@ const Message = ({
         {/** Attachments Preview --Start-- */}
         {hasAttachments && (
           <div className="relative overflow-hidden">
-            {isSending && (
+            {(isSending || progressInfo?.progress) && (
               <MessageUploadProgressIndicatior
                 percentage={progressInfo?.progress}
               />

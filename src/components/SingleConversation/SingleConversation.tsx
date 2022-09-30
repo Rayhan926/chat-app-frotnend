@@ -66,17 +66,18 @@ const SingleConversation = ({
       {/** Avatar --End-- */}
 
       {/** Name and last message --Start-- */}
-      <div className="space-y-0">
+      <div className="space-y-0.5">
         <h3 className="font-semibold text-base text-dark-900 line-clamp-1">
           {name}
         </h3>
+        {/* <p className="text-[13px] leading-[13px]">Hello</p> */}
         {isTyping ? (
-          <p className="text-[13px] leading-[13px] inline-block text-primary h-4">
+          <p className="text-[13px] leading-[13px] h-4 text-primary">
             Typing..
           </p>
         ) : (
           lastMessage && (
-            <p className="text-[13px] leading-[13px] text-dark-800 inline-flex items-center gap-1 h-4 relative line-clamp-1">
+            <div className="text-[13px] leading-[13px] text-dark-800 flex items-center gap-1 relative h-4">
               {isLastMessageMine && (
                 <MessageStatusIndicator
                   status={lastMessage.status}
@@ -93,14 +94,14 @@ const SingleConversation = ({
                   <IoCamera size={16} />
                 </span>
               )}
-              <span className={cx(hasAttachments && 'pl-5')}>
-                {lastMessage.message
-                  ? lastMessage.message
-                  : hasAttachments
-                  ? 'Photo'
-                  : null}
-              </span>
-            </p>
+              <div className={cx(hasAttachments && 'pl-5')}>
+                {lastMessage.message ? (
+                  <p className="line-clamp-1 pb-0.5">{lastMessage.message}</p>
+                ) : hasAttachments ? (
+                  <span>Photo</span>
+                ) : null}
+              </div>
+            </div>
           )
         )}
       </div>
