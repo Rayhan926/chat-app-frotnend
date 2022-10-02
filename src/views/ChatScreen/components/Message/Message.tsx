@@ -1,28 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
-import MessageStatusIndicator from '@components/MessageStatusIndicator';
 import useSession from '@hooks/useSession';
-import useUploadOnProgress from '@hooks/useUploadOnProgress';
 import { Chat } from '@types';
-import { cx, getFullPath } from '@utils';
+import { cx } from '@utils';
 import moment from 'moment';
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 
-const MessageUploadProgressIndicatior = dynamic(
-  () => import('../MessageUploadProgressIndicatior'),
+const MessageAttachments = dynamic(() => import('../MessageAttachments'));
+const MessageStatusIndicator = dynamic(
+  () => import('@components/MessageStatusIndicator'),
 );
 
-const Message = ({
-  message,
-  senderId,
-  _id,
-  status,
-  createdAt,
-  attachments = [],
-  isTyping,
-}: Chat) => {
+const Message = (chat: Chat) => {
+  const {
+    message,
+    senderId,
+    _id,
+    status,
+    createdAt,
+    attachments = [],
+    isTyping,
+  } = chat;
   const { session } = useSession();
-  const { progressInfo } = useUploadOnProgress(_id);
+
   const isMe = senderId === session?.user?._id;
   const isSending = status === 'sending';
   const hasAttachments = attachments.length > 0;
@@ -57,48 +56,7 @@ const Message = ({
       >
         {/** Attachments Preview --Start-- */}
         {hasAttachments && (
-          <div className="relative overflow-hidden">
-            {(isSending || progressInfo?.progress) && (
-              <MessageUploadProgressIndicatior
-                percentage={progressInfo?.progress}
-              />
-            )}
-
-            <div
-              style={{
-                // gridTemplateColumns: attachments.length >= 2 ? '1fr 1fr' : '1fr',
-                gridTemplateColumns: '1fr',
-              }}
-              className={cx(
-                'p-[3px] grid gap-[3px]',
-                message ? 'pb-0' : 'pb-[3px]',
-              )}
-            >
-              {attachments.map((attachment) => (
-                <div
-                  className={cx(
-                    'single_attachment bg-white overflow-hidden [&>span]:!block',
-                    // isMe ? 'rounded-l-[10px]' : 'rounded-r-[10px]',
-                    isMe
-                      ? 'first:rounded-tl-[10px] last:rounded-bl-[10px]'
-                      : 'first:rounded-tr-[10px] last:rounded-br-[10px]',
-                  )}
-                  key={attachment._id}
-                >
-                  <Image
-                    alt=""
-                    src={
-                      attachment?.preview || getFullPath(attachment?.path || '')
-                    }
-                    width={attachment.width}
-                    height={attachment.height}
-                    objectFit="contain"
-                    className="w-full"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          <MessageAttachments {...chat} isSending={isSending} isMe={isMe} />
         )}
         {/** Attachments Preview --End-- */}
 

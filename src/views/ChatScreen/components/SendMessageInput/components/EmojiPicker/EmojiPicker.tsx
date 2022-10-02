@@ -15,10 +15,10 @@ const EmojiPicker = () => {
     setFieldValue('message', message + emoji.native);
   };
   return (
-    <div>
+    <>
       <button
         type="button"
-        className={'pl-3 __emoji_btn'}
+        className={'__emoji_btn'}
         onClick={() => setIsOpenPicker((prev) => !prev)}
       >
         {isOpenPicker ? <IoCloseSharp size={20} /> : <BsEmojiSmile size={20} />}
@@ -42,7 +42,7 @@ const EmojiPicker = () => {
           onClickOutside={() => isOpenPicker && setIsOpenPicker(false)}
         />
       </div>
-    </div>
+    </>
   );
 };
 

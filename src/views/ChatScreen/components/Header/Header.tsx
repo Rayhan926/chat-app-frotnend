@@ -27,11 +27,11 @@ const Header = () => {
   };
 
   return (
-    <div className="flex items-center __px shrink-0 py-4 gap-2 border-b border-dark-100">
+    <div className="flex items-center __px shrink-0 py-3 sm:py-4 gap-2 border-b border-dark-100">
       {/** Go back --Start-- */}
       <button
         onClick={goBackHandler}
-        className="w-9 h-9 rounded-full overflow-hidden flex justify-center items-center -ml-3 hover:bg-dark-100 text-primary"
+        className="w-9 h-9 shrink-0 rounded-full overflow-hidden flex justify-center items-center -ml-3 hover:bg-dark-100 text-primary"
       >
         <FiChevronLeft size={20} />
       </button>
@@ -40,7 +40,7 @@ const Header = () => {
       {/** User Info --Start-- */}
       <div className="flex items-center gap-3">
         {user ? (
-          <div className="w-9 h-9 rounded-full bg-dark-100 relative overflow-hidden">
+          <div className="w-9 h-9 shrink-0 rounded-full bg-dark-100 relative overflow-hidden">
             <Image
               alt={user.name}
               src={user?.avatar || '/images/avatar.png'}
@@ -48,16 +48,16 @@ const Header = () => {
             />
           </div>
         ) : (
-          <Skeleton circle width={36} height={36} />
+          <Skeleton circle width={36} height={36} className="shrink-0" />
         )}
         <div>
           {user ? (
             <>
-              <h3 className="text-sm font-semibold text-dark-900">
+              <h3 className="text-sm font-semibold text-dark-900 line-clamp-1">
                 {user?.name}
               </h3>
               {user?.status === 'online' ? (
-                <p className="text-[11px] text-green-600 capitalize">
+                <p className="text-[11px] text-green-600 capitalize line-clamp-1">
                   {user?.status}
                 </p>
               ) : (

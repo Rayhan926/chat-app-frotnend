@@ -1,3 +1,4 @@
+import { USER_KEY } from '@config/constants';
 import {
   Chat,
   ChatBoxProps,
@@ -8,12 +9,15 @@ import {
   Typing,
   UploadOnProgress,
 } from '@types';
+import { atomWithLocalStorage } from '@utils';
 import { atom, useAtom } from 'jotai';
 import { Socket } from 'socket.io-client';
 
 const sendFriendRequesDrawerAtom = atom(false);
 export const useOpenFriendRequestDrawer = () =>
   useAtom(sendFriendRequesDrawerAtom);
+
+export const userAtom = atomWithLocalStorage(USER_KEY);
 
 export const toastAtom = atom<ToastAtomType[]>([]);
 export const conversationsAtom = atom<Conversation[]>([]);

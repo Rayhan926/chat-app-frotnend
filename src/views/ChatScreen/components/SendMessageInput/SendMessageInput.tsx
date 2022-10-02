@@ -145,21 +145,21 @@ const SendMessageInput = () => {
   });
 
   return (
-    <div className="shrink-0 pb-3.5 pt-2 px-3.5">
+    <div className="shrink-0 sm:pb-3.5 py-2 px-3.5">
       <AttachmentsPreview />
       <form className="flex gap-1 items-end" onSubmit={handleSubmit}>
         {/** Input --Start-- */}
         <div className="grow flex rounded-[25px] items-center bg-dark-100 min-h-11 relative">
           <EmojiPicker />
           <TextareaAutosize
-            maxRows={4}
+            // maxRows={4}
             placeholder="Message"
             value={message}
             id="message_input"
             onChange={(e) => {
               setFieldValue('message', e.target.value);
             }}
-            className="w-full resize-none outline-none py-2.5 px-3 text-dark-900 placeholder:text-dark-700 bg-transparent"
+            className="w-full resize-none outline-none py-2.5 text-dark-900 placeholder:text-dark-700 bg-transparent"
           />
           <AttachmentsPicker />
         </div>

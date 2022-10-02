@@ -1,5 +1,7 @@
 import { tabsInfo } from '@config/constants';
+import { AuthUser } from '@types';
 import classNames from 'classnames';
+import { atom } from 'jotai';
 import Cookies from 'universal-cookie';
 
 export const cx = classNames;
@@ -47,4 +49,18 @@ export const getTabTitle = (url: string) => {
   const tab = tabsInfo.find((tabInfo) => tabInfo.url === url);
 
   return tab?.title || 'Inbox';
+};
+
+export const atomWithLocalStorage = (key: string) => {
+  const baseAtom = atom<AuthUser | null>(null);
+  const derivedAtom = atom(
+    (get) => get(baseAtom),
+    (get, set, update) => {
+      const nextValue =
+        typeof update === 'function' ? update(get(baseAtom)) : update;
+      set(baseAtom, nextValue);
+      localStorage.setItem(key, JSON.stringify(nextValue));
+    },
+  );
+  return derivedAtom;
 };

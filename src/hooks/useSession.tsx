@@ -1,9 +1,10 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-trailing-spaces */
 import client from '@client';
 import { googleLogin } from '@client/mutations';
 import { TOKEN_KEY, USER_KEY } from '@config/constants';
-import { getLocal, removeBoth, setLocal } from '@lib/localstorage';
-import { AuthContenxtValue, AuthProviderProps, AuthUser, Login } from '@types';
+import { removeBoth } from '@lib/localstorage';
+import { AuthContenxtValue, AuthProviderProps, Login } from '@types';
 import { cookies, getErrorMsg } from '@utils';
 import { useRouter } from 'next/router';
 import {
@@ -16,9 +17,12 @@ import {
 } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import useConversations from './useConversations';
+import useFriendRequests from './useFriendRequests';
+import useSentFriendRequests from './useSentFriendRequests';
 import useSocket from './useSocket';
 import useToast from './useToast';
 import useToggle from './useToggle';
+import useUser from './useUser';
 
 const AuthContext = createContext<AuthContenxtValue>({
   session: null,
@@ -29,38 +33,35 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // hooks
   const queryClient = useQueryClient();
   const { refetch } = useConversations();
+  const { refetch: refetchFriendRequests } = useFriendRequests();
+  const { refetch: refetchSentFriendRequests } = useSentFriendRequests();
   const router = useRouter();
   const { setToast } = useToast();
   const { socket } = useSocket();
   const { toggleState } = useToggle();
 
   // state
-  const [localUser, setLocalUser] = useState<AuthUser | null>(null);
+  const { user, setUser } = useUser();
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  const setUserHandler = useCallback((user: AuthUser) => {
-    setLocalUser(user);
-    setLocal(USER_KEY, user);
-  }, []);
-
   useEffect(() => {
-    if (localUser?._id && accessToken) {
+    if (user?._id && accessToken) {
       socket?.emit('join', {
-        id: localUser?._id,
+        id: user?._id,
         token: `Bearer ${accessToken}`,
       });
     }
-  }, [localUser, socket, accessToken]);
+  }, [user, socket, accessToken]);
 
   // Login
   const login = useCallback(
     ({ token, user }: Login) => {
       cookies.set(TOKEN_KEY, token, { path: '/' });
       setAccessToken(token);
-      setUserHandler(user);
+      setUser(user);
       router.push('/');
     },
-    [router, setUserHandler],
+    [router, setUser],
   );
 
   const mutateGoogleLogin = useMutation(
@@ -78,21 +79,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     if (!accessToken) return;
     refetch();
-  }, [refetch, accessToken]);
+    refetchFriendRequests();
+    refetchSentFriendRequests();
+  }, [accessToken, refetch, refetchFriendRequests, refetchSentFriendRequests]);
 
   // Fetching user info if it's not in local storage but has the access token in cookie
   useEffect(() => {
-    if (accessToken && !localUser) {
+    if (accessToken && !user) {
       client.get('/auth/get-user').then(({ data: { data } }) => {
-        setUserHandler(data);
+        setUser(data);
       });
     }
-  }, [localUser, accessToken, setUserHandler]);
+  }, [user, accessToken, setUser]);
 
   // Setting access token to state after page mounted
   useEffect(() => {
     setAccessToken(cookies.get(TOKEN_KEY));
-    setLocalUser(getLocal(USER_KEY));
   }, []);
 
   // Logout
@@ -105,22 +107,23 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     toggleState();
 
     router.push('/login').then(() => {
+      setUser(null);
       removeBoth(USER_KEY);
       queryClient.removeQueries();
     });
-  }, [router, queryClient, socket, toggleState]);
+  }, [router, queryClient, socket, toggleState, setUser]);
 
   // Context value with useMemo
   const contextValue = useMemo<AuthContenxtValue>(() => {
     return {
       session: {
-        user: localUser,
+        user,
         token: accessToken,
       },
       logout,
       mutateGoogleLogin,
     };
-  }, [localUser, accessToken, logout, mutateGoogleLogin]);
+  }, [user, accessToken, logout, mutateGoogleLogin]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

@@ -1,8 +1,10 @@
 import { accpetFriendRequest } from '@client/mutations';
 import Button from '@components/Button/Button';
+import useConversations from '@hooks/useConversations';
 import useFriendRequests from '@hooks/useFriendRequests';
 import useRejectFriendRequest from '@hooks/useRejectFriendRequest';
 import useToast from '@hooks/useToast';
+import useUser from '@hooks/useUser';
 import { ChatBoxProps } from '@types';
 import Image from 'next/image';
 import { useMutation } from 'react-query';
@@ -10,12 +12,18 @@ import { useMutation } from 'react-query';
 const FriendRequest = ({ avatar, _id, name }: ChatBoxProps) => {
   const { setToast } = useToast();
   const { removeFromList } = useFriendRequests();
-
+  const { updateUser } = useUser();
+  const { addNewConversation } = useConversations();
   // accpet request
   const accept = useMutation(() => accpetFriendRequest(_id), {
     onSuccess: (res) => {
       removeFromList(_id);
       setToast({ message: res.data.message });
+      updateUser((user) => ({
+        ...user,
+        newFriendRequestsNotification: user.newFriendRequestsNotification - 1,
+      }));
+      addNewConversation(res.data.data);
     },
     onError: (err: any) => setToast({ message: err.response.data.message }),
   });

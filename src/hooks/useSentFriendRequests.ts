@@ -2,6 +2,7 @@ import { friendRequestsSentAtom } from '@atoms';
 import { getSentFriendRequests } from '@client/queries';
 import { ChatBoxProps } from '@types';
 import { useAtom } from 'jotai';
+import { useCallback } from 'react';
 import { useQuery } from 'react-query';
 
 const useSentFriendRequests = () => {
@@ -14,14 +15,25 @@ const useSentFriendRequests = () => {
     enabled: false,
   });
 
-  const removeFromList = (id: string) => {
-    setSentFriendRequests((prevRequests) =>
-      prevRequests.filter((request) => request._id !== id),
-    );
-  };
+  const removeFromList = useCallback(
+    (id: string) => {
+      setSentFriendRequests((prevRequests) =>
+        prevRequests.filter((request) => request._id !== id),
+      );
+    },
+    [setSentFriendRequests],
+  );
+
+  const addToList = useCallback(
+    (newData: ChatBoxProps) => {
+      setSentFriendRequests((prevRequests) => [...prevRequests, newData]);
+    },
+    [setSentFriendRequests],
+  );
   return {
     sentFriendRequests,
     removeFromList,
+    addToList,
     ...query,
   };
 };

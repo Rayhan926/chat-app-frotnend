@@ -2,11 +2,15 @@
 import useChats from '@hooks/useChats';
 import useConversations from '@hooks/useConversations';
 import useDropFiles from '@hooks/useDropFiles';
+import useFriendRequests from '@hooks/useFriendRequests';
+import useSentFriendRequests from '@hooks/useSentFriendRequests';
 import useSession from '@hooks/useSession';
 import useSocket from '@hooks/useSocket';
+import useToast from '@hooks/useToast';
 import useToggle from '@hooks/useToggle';
 import useTyping from '@hooks/useTyping';
-import { Chat } from '@types';
+import useUser from '@hooks/useUser';
+import { Chat, ChatBoxProps } from '@types';
 import { cx, scrollChatScreenToBottom } from '@utils';
 import { ReactNode, useEffect } from 'react';
 import Div100vh from 'react-div-100vh';
@@ -17,6 +21,11 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
   const { setSocket, socket } = useSocket();
   const { session } = useSession();
   const { toggle } = useToggle();
+  const { addToList, removeFromList: removeFriendRequestFromList } =
+    useFriendRequests();
+  const { removeFromList } = useSentFriendRequests();
+  const { updateUser } = useUser();
+  const { setToast } = useToast();
 
   const {
     addChat,
@@ -26,8 +35,13 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
     removeTypingFromChatList,
   } = useChats();
 
-  const { updateConversation, getUserInfo, conversations, updateTypingStatus } =
-    useConversations();
+  const {
+    updateConversation,
+    getUserInfo,
+    conversations,
+    updateTypingStatus,
+    addNewConversation,
+  } = useConversations();
 
   const { cancelTyping } = useTyping();
 
@@ -106,6 +120,39 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
       });
     });
 
+    socket.on('new-friend-request', (data) => {
+      addToList(data.user);
+      setToast({
+        message: `You just received a friend request from ${data.user.name}`,
+      });
+      updateUser({
+        newFriendRequestsNotification: data.newFriendRequestsNotification,
+      });
+    });
+
+    socket.on('friend-request-accept', (user: ChatBoxProps) => {
+      setToast({
+        message: `${user.name} just accept your friend request`,
+      });
+      removeFromList(user._id);
+      addNewConversation(user as any);
+    });
+
+    socket.on('reject-friend-request', (user) => {
+      removeFromList(user?._id);
+      setToast({
+        message: `${user?.name} rejected your friend request`,
+      });
+    });
+
+    socket.on('cancel-friend-request', (user: ChatBoxProps) => {
+      removeFriendRequestFromList(user._id);
+      updateUser((u) => ({
+        ...u,
+        newFriendRequestsNotification: u.newFriendRequestsNotification - 1,
+      }));
+    });
+
     return () => {
       socket.off('new-message');
       socket.off('seen-messages');
@@ -114,6 +161,10 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
       socket.off('cancelTyping');
       socket.off('user-online');
       socket.off('user-offline');
+      socket.off('new-friend-request');
+      socket.off('friend-request-accept');
+      socket.off('reject-friend-request');
+      socket.off('cancel-friend-request');
     };
   }, [
     activeConversation,
@@ -129,6 +180,12 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
     addTypingToChatList,
     removeTypingFromChatList,
     cancelTyping,
+    addToList,
+    updateUser,
+    removeFromList,
+    setToast,
+    addNewConversation,
+    removeFriendRequestFromList,
   ]);
 
   return (

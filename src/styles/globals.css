@@ -4,13 +4,13 @@
 
 @layer components {
   .__px {
-    @apply px-6;
+    @apply px-5 sm:px-6;
   }
   .float_btn_shadow {
     box-shadow: 0 0 20px theme(colors.primary / 30%);
   }
   .__emoji_btn {
-    @apply rounded-full flex justify-center items-center h-full text-dark-900/50 cursor-pointer;
+    @apply rounded-full w-11 shrink-0 aspect-square flex justify-center items-center self-end h-full text-dark-900/50 cursor-pointer;
   }
 }
 

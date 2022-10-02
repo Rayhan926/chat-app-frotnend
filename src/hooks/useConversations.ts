@@ -1,5 +1,6 @@
 import { conversationsAtom } from '@atoms';
 import { getConversations } from '@client/queries';
+import { Conversation } from '@types';
 import { useAtom } from 'jotai';
 import { useCallback } from 'react';
 import { useQuery } from 'react-query';
@@ -24,6 +25,13 @@ const useConversations = () => {
       );
     },
     [conversations],
+  );
+
+  const addNewConversation = useCallback(
+    (newConversation: Conversation) => {
+      setConversations((prev) => [...prev, newConversation]);
+    },
+    [setConversations],
   );
 
   const updateConversation = useCallback(
@@ -57,8 +65,9 @@ const useConversations = () => {
     getUserInfo,
     updateConversation,
     updateTypingStatus,
-    ...query,
+    addNewConversation,
     conversations,
+    ...query,
   };
 };
 

@@ -3,7 +3,13 @@ import { cx } from '@utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-const TabButton = ({ activeIcon, icon, path }: TabButtonProps) => {
+const TabButton = ({
+  activeIcon,
+  icon,
+  path,
+  className,
+  extraChildren,
+}: TabButtonProps) => {
   const router = useRouter();
 
   const isActive = router.pathname === path;
@@ -15,7 +21,10 @@ const TabButton = ({ activeIcon, icon, path }: TabButtonProps) => {
           isActive ? 'text-primary' : 'hover:text-primary text-dark-700/70',
         )}
       >
-        {isActive ? activeIcon : icon}
+        <span className={cx(className)}>
+          {isActive ? activeIcon : icon}
+          {extraChildren}
+        </span>
       </a>
     </Link>
   );

@@ -1,6 +1,7 @@
 import { useOpenFriendRequestDrawer } from '@atoms';
 import { sendFriendRequest } from '@client/mutations';
 import Drawer from '@components/Drawer';
+import useSentFriendRequests from '@hooks/useSentFriendRequests';
 import useToast from '@hooks/useToast';
 import { getErrorMsg } from '@utils';
 import React, { useState } from 'react';
@@ -9,14 +10,17 @@ import { useMutation } from 'react-query';
 const SendFriendRequestDrawer = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [isOpen, setIsOpen] = useOpenFriendRequestDrawer();
+  const { addToList } = useSentFriendRequests();
   const { setToast } = useToast();
 
   const { mutate, isLoading } = useMutation(sendFriendRequest, {
-    onSuccess: (res) =>
+    onSuccess: (res) => {
+      addToList(res.data.data);
       setToast({
         type: 'success',
         message: res.data.message,
-      }),
+      });
+    },
     onError: (err: any) =>
       setToast({
         type: 'error',
@@ -37,7 +41,7 @@ const SendFriendRequestDrawer = () => {
 
   return (
     <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)}>
-      <div className="__px py-8">
+      <div className="__px py-5 sm:py-6">
         <h3 className="text-2xl text-white font-bold">Connect with Friends</h3>
 
         <form className="mt-6 space-y-3" onSubmit={submitHandler}>

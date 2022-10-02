@@ -12,6 +12,8 @@ export type AuthUser = {
   _id: string;
   avatar?: string;
   username?: string;
+  socketId: string | null;
+  newFriendRequestsNotification: number;
 };
 export type AuthContenxtValue = {
   session: {
@@ -97,6 +99,8 @@ export type TabButtonProps = {
   icon: ReactNode;
   activeIcon: ReactNode;
   path: string;
+  extraChildren?: ReactNode;
+  className?: string;
 };
 
 type Tab = {
@@ -132,4 +136,9 @@ export type MessageStatusIndicatorProps = {
 
 export type Typing = {
   userId: string;
+};
+
+export type MessageAttachmentsProps = Chat & {
+  isSending: boolean;
+  isMe: boolean;
 };

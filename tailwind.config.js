@@ -14,6 +14,13 @@ module.exports = {
         },
       },
     },
+    screens: {
+      sm: '420px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
   },
   // eslint-disable-next-line import/no-extraneous-dependencies, global-require
   plugins: [require('@tailwindcss/line-clamp'), require('tailwind-scrollbar')],
