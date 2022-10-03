@@ -34,6 +34,8 @@ const useChats = () => {
     },
   );
 
+  // console.log({ ss: query.data });
+
   const organizeChats = useCallback((__chats: Chat[]) => {
     const organizedChats: Chat[][] = [];
     let temporaryChats: Chat[] = [];

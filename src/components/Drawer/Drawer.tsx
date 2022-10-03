@@ -1,13 +1,22 @@
 import ChatBodyPortal from '@components/ChatBodyPortal';
 import { DrawerProps } from '@types';
 import { cx } from '@utils';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useClickAway } from 'react-use';
 
-const Drawer = ({ isOpen, onClose, children }: DrawerProps) => {
+const Drawer = ({ isOpen, onClose, children, onOpen }: DrawerProps) => {
   const contentRef = useRef<HTMLDivElement>(null!);
   useClickAway(contentRef, onClose);
+
+  useEffect(() => {
+    if (isOpen && onOpen) {
+      setTimeout(() => {
+        onOpen();
+      }, 400);
+    }
+  }, [isOpen, onOpen]);
+
   return (
     <ChatBodyPortal>
       <div

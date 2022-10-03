@@ -79,7 +79,7 @@ const Message = (chat: Chat) => {
                 : 'float-right translate-y-1',
             )}
           >
-            <span>{moment(createdAt).format('HH:mm A')}</span>
+            <span>{moment(createdAt).format('hh:mm A')}</span>
 
             {isMe && <MessageStatusIndicator status={status} />}
           </span>

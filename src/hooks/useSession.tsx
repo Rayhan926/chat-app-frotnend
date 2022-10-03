@@ -3,7 +3,7 @@
 import client from '@client';
 import { googleLogin } from '@client/mutations';
 import { TOKEN_KEY, USER_KEY } from '@config/constants';
-import { removeBoth } from '@lib/localstorage';
+import { getLocal, removeBoth } from '@lib/localstorage';
 import { AuthContenxtValue, AuthProviderProps, Login } from '@types';
 import { cookies, getErrorMsg } from '@utils';
 import { useRouter } from 'next/router';
@@ -95,7 +95,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   // Setting access token to state after page mounted
   useEffect(() => {
     setAccessToken(cookies.get(TOKEN_KEY));
-  }, []);
+    setUser(getLocal(USER_KEY));
+  }, [setUser]);
 
   // Logout
   const logout = useCallback(() => {

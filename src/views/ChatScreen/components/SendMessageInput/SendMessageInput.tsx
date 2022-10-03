@@ -12,7 +12,7 @@ import useUploadOnProgress from '@hooks/useUploadOnProgress';
 import { SendMessageType } from '@types';
 import { getErrorMsg, scrollChatScreenToBottom } from '@utils';
 import { useRouter } from 'next/router';
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { IoMdSend } from 'react-icons/io';
 import { useMutation } from 'react-query';
@@ -33,6 +33,8 @@ const SendMessageInput = () => {
   const { addProgress } = useUploadOnProgress();
   const { cancelTyping, clearTimeOut } = useTyping();
 
+  const messageInputRef = useRef<HTMLTextAreaElement>(null);
+
   const receiverUser = getUserInfo(router.query.id as string);
 
   const { mutate } = useMutation(
@@ -49,7 +51,6 @@ const SendMessageInput = () => {
           if (toNumber < 1) {
             clearTimeOut();
           }
-          // console.log(randomId, toNumber);
           addProgress({
             id: randomId,
             progress: toNumber,
@@ -100,6 +101,7 @@ const SendMessageInput = () => {
       refresh();
       setTimeout(() => {
         setFieldValue('message', '');
+        messageInputRef.current?.focus();
       });
       scrollChatScreenToBottom();
 
@@ -153,6 +155,7 @@ const SendMessageInput = () => {
           <EmojiPicker />
           <TextareaAutosize
             // maxRows={4}
+            ref={messageInputRef}
             placeholder="Message"
             value={message}
             id="message_input"

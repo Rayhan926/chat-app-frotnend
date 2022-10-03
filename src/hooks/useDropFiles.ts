@@ -40,7 +40,10 @@ const useDropFiles = (options?: DropzoneOptions | undefined) => {
   const dropzone = useDropzone({
     onDrop,
     accept: {
-      'image/*': [],
+      'image/jpeg': [],
+      'image/jpg': [],
+      'image/png': [],
+      'image/webp': [],
     },
     ...options,
   });

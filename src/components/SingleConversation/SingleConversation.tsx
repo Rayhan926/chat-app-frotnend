@@ -5,6 +5,7 @@ import useConversations from '@hooks/useConversations';
 import useSession from '@hooks/useSession';
 import { Conversation } from '@types';
 import { cx } from '@utils';
+import { motion } from 'framer-motion';
 import moment from 'moment';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -45,7 +46,7 @@ const SingleConversation = ({
       className="flex items-center __px py-2.5 gap-4 cursor-pointer hover:bg-dark-100/40"
     >
       {/** Avatar --Start-- */}
-      <div className="relative">
+      <motion.div layoutId={`avatar-${username}`} className="relative">
         <div className="w-12 h-12 rounded-full bg-dark-100 shrink-0 overflow-hidden relative">
           <Image
             src={avatar || '/images/avatar.png'}
@@ -62,7 +63,7 @@ const SingleConversation = ({
           )}
         ></div>
         {/** Status Indication --End-- */}
-      </div>
+      </motion.div>
       {/** Avatar --End-- */}
 
       {/** Name and last message --Start-- */}

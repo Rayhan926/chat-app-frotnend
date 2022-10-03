@@ -1,5 +1,6 @@
 import useChats from '@hooks/useChats';
 import useConversations from '@hooks/useConversations';
+import { motion } from 'framer-motion';
 import moment from 'moment';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -40,17 +41,32 @@ const Header = () => {
       {/** User Info --Start-- */}
       <div className="flex items-center gap-3">
         {user ? (
-          <div className="w-9 h-9 shrink-0 rounded-full bg-dark-100 relative overflow-hidden">
+          <motion.div
+            layoutId={`avatar-${router.query.id}`}
+            className="w-9 h-9 shrink-0 rounded-full bg-dark-100 relative overflow-hidden"
+          >
             <Image
               alt={user.name}
               src={user?.avatar || '/images/avatar.png'}
               layout="fill"
             />
-          </div>
+          </motion.div>
         ) : (
           <Skeleton circle width={36} height={36} className="shrink-0" />
         )}
-        <div>
+        <motion.div
+          transition={{
+            damping: 0,
+          }}
+          initial={{
+            x: 50,
+            opacity: 0,
+          }}
+          animate={{
+            x: 0,
+            opacity: 1,
+          }}
+        >
           {user ? (
             <>
               <h3 className="text-sm font-semibold text-dark-900 line-clamp-1">
@@ -73,7 +89,7 @@ const Header = () => {
               <Skeleton width={38} height={11} className="mt-1.5" />
             </>
           )}
-        </div>
+        </motion.div>
       </div>
       {/** User Info --End-- */}
     </div>

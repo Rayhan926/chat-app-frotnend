@@ -1,11 +1,20 @@
+/* eslint-disable indent */
 import Spinner from '@components/Spinner';
 import useChats from '@hooks/useChats';
+import { Chat } from '@types';
 import Header from './components/Header';
 import Message from './components/Message';
 import SendMessageInput from './components/SendMessageInput';
 
 const ChatScreen = () => {
-  const { chats, isLoading, isError, isIdle, organizeChats } = useChats();
+  const { chats, data, isLoading, isError, isIdle, organizeChats } = useChats();
+
+  const finalChats =
+    chats.length > 0
+      ? chats
+      : (data as any)?.length > 0
+      ? (data as Chat[])
+      : [];
 
   return (
     <div className="h-full flex flex-col">
@@ -20,7 +29,7 @@ const ChatScreen = () => {
           'Error'
         ) : (
           <>
-            {organizeChats(chats).map((chatBlocks, index) => {
+            {organizeChats(finalChats).map((chatBlocks, index) => {
               return (
                 <div key={index} className="space-y-0.5">
                   {chatBlocks.map((chat) => (

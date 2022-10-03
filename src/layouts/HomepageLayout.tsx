@@ -12,7 +12,7 @@ const HomepageLayout = ({
       <Header />
       <div
         className={cx(
-          'grow overflow-y-auto scrollbar-none py-2.5',
+          'grow overflow-y-auto scrollbar-none pb-2.5',
           contentWrapperClass,
         )}
       >

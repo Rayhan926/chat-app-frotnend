@@ -4,7 +4,7 @@ import Drawer from '@components/Drawer';
 import useSentFriendRequests from '@hooks/useSentFriendRequests';
 import useToast from '@hooks/useToast';
 import { getErrorMsg } from '@utils';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 
 const SendFriendRequestDrawer = () => {
@@ -12,6 +12,8 @@ const SendFriendRequestDrawer = () => {
   const [isOpen, setIsOpen] = useOpenFriendRequestDrawer();
   const { addToList } = useSentFriendRequests();
   const { setToast } = useToast();
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { mutate, isLoading } = useMutation(sendFriendRequest, {
     onSuccess: (res) => {
@@ -40,13 +42,20 @@ const SendFriendRequestDrawer = () => {
   };
 
   return (
-    <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)}>
+    <Drawer
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      onOpen={() => inputRef.current?.focus()}
+    >
       <div className="__px py-5 sm:py-6">
-        <h3 className="text-2xl text-white font-bold">Connect with Friends</h3>
+        <h3 className="text-2xl text-white font-semibold">
+          Connect with Friends
+        </h3>
 
         <form className="mt-6 space-y-3" onSubmit={submitHandler}>
           <input
             type="text"
+            ref={inputRef}
             value={usernameOrEmail}
             onChange={(e) => setUsernameOrEmail(e.target.value)}
             className="w-full px-5 py-3 rounded-md outline-none bg-white text-dark-900"
@@ -55,7 +64,7 @@ const SendFriendRequestDrawer = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full px-5 py-3 rounded-md outline-none bg-white text-dark-900"
+            className="w-full px-5 py-3 rounded-md outline-none bg-white text-primary hover:bg-white/90"
           >
             {isLoading ? 'Sending request..' : 'Send'}
           </button>

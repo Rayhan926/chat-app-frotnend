@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { UseMutationResult } from 'react-query';
 
 export type AuthProviderProps = {
@@ -38,6 +38,7 @@ export type Login = {
 export type DrawerProps = {
   isOpen: boolean;
   onClose: () => void;
+  onOpen?: () => void;
   children?: ReactNode;
 };
 
@@ -142,3 +143,9 @@ export type MessageAttachmentsProps = Chat & {
   isSending: boolean;
   isMe: boolean;
 };
+
+export type ListProps = {
+  title: ReactNode;
+  icon: ReactNode;
+  value?: string;
+} & React.ComponentProps<'div'>;
