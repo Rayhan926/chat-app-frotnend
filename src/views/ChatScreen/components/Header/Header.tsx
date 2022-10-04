@@ -28,11 +28,11 @@ const Header = () => {
   };
 
   return (
-    <div className="flex items-center __px shrink-0 py-3 sm:py-4 gap-2 border-b border-dark-100">
+    <div className="flex items-center __px shrink-0 py-3 sm:py-4 gap-2 border-b border-dark-100 dark:border-dark-mode-800">
       {/** Go back --Start-- */}
       <button
         onClick={goBackHandler}
-        className="w-9 h-9 shrink-0 rounded-full overflow-hidden flex justify-center items-center -ml-3 hover:bg-dark-100 text-primary"
+        className="w-9 h-9 shrink-0 rounded-full overflow-hidden flex justify-center items-center -ml-3 hover:bg-dark-100 dark:hover:bg-dark-mode-800 text-primary"
       >
         <FiChevronLeft size={20} />
       </button>
@@ -69,7 +69,7 @@ const Header = () => {
         >
           {user ? (
             <>
-              <h3 className="text-sm font-semibold text-dark-900 line-clamp-1">
+              <h3 className="text-sm font-semibold text-dark-900 dark:text-white line-clamp-1">
                 {user?.name}
               </h3>
               {user?.status === 'online' ? (
@@ -77,7 +77,7 @@ const Header = () => {
                   {user?.status}
                 </p>
               ) : (
-                <p className="text-[11px] text-dark-700">
+                <p className="text-[11px] text-dark-700 dark:text-dark-mode-300">
                   Last seen{' '}
                   {user?.lastSeen ? moment(user?.lastSeen).fromNow() : 'Nan'}
                 </p>

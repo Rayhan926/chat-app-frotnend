@@ -43,11 +43,11 @@ const SingleConversation = ({
   return (
     <div
       onClick={onConversationClick}
-      className="flex items-center __px py-2.5 gap-4 cursor-pointer hover:bg-dark-100/40"
+      className="flex items-center __px py-2.5 gap-4 cursor-pointer hover:bg-dark-100/40 dark:hover:bg-dark-mode-800"
     >
       {/** Avatar --Start-- */}
       <motion.div layoutId={`avatar-${username}`} className="relative">
-        <div className="w-12 h-12 rounded-full bg-dark-100 shrink-0 overflow-hidden relative">
+        <div className="w-12 h-12 rounded-full bg-dark-100 dark:bg-dark-mode-700 shrink-0 overflow-hidden relative">
           <Image
             src={avatar || '/images/avatar.png'}
             alt={name}
@@ -58,8 +58,8 @@ const SingleConversation = ({
         {/** Status Indication --Start-- */}
         <div
           className={cx(
-            'w-3 h-3 border-2 border-white absolute bottom-0 right-0 rounded-full',
-            isOnline ? 'bg-green-500' : 'bg-slate-400',
+            'w-3 h-3 border-2 border-white dark:border-dark-mode-900 absolute bottom-0 right-0 rounded-full',
+            isOnline ? 'bg-green-500' : 'bg-slate-400 dark:bg-dark-mode-300',
           )}
         ></div>
         {/** Status Indication --End-- */}
@@ -68,7 +68,7 @@ const SingleConversation = ({
 
       {/** Name and last message --Start-- */}
       <div className="space-y-0.5">
-        <h3 className="font-semibold text-base text-dark-900 line-clamp-1">
+        <h3 className="font-semibold text-base text-dark-900 dark:text-white line-clamp-1">
           {name}
         </h3>
         {/* <p className="text-[13px] leading-[13px]">Hello</p> */}
@@ -78,7 +78,7 @@ const SingleConversation = ({
           </p>
         ) : (
           lastMessage && (
-            <div className="text-[13px] leading-[13px] text-dark-800 flex items-center gap-1 relative h-4">
+            <div className="text-[13px] leading-[13px] text-dark-800 dark:text-dark-mode-100 flex items-center gap-1 relative h-4">
               {isLastMessageMine && (
                 <MessageStatusIndicator
                   status={lastMessage.status}
@@ -88,7 +88,7 @@ const SingleConversation = ({
               {hasAttachments && (
                 <span
                   className={cx(
-                    'inline text-dark-800 absolute top-0 left-0',
+                    'inline text-dark-800 dark:text-dark-mode-100 absolute top-0 left-0',
                     isLastMessageMine ? 'left-4' : 'left-0',
                   )}
                 >
@@ -114,7 +114,9 @@ const SingleConversation = ({
           <p
             className={cx(
               'text-xs',
-              unseenMessageCount ? 'text-primary' : 'text-dark-700',
+              unseenMessageCount
+                ? 'text-primary'
+                : 'text-dark-700 dark:text-dark-mode-300',
             )}
           >
             {moment(lastMessage.createdAt).format('hh:mm A')}

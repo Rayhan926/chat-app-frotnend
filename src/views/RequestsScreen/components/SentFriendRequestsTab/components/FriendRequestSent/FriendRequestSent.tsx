@@ -8,11 +8,11 @@ const FriendRequestSent = ({ avatar, _id, name }: ChatBoxProps) => {
 
   return (
     <div className="flex items-center __px py-2.5 gap-4">
-      <div className="w-12 h-12 rounded-full bg-dark-100 shrink-0 overflow-hidden relative">
+      <div className="w-12 h-12 rounded-full bg-dark-100 dark:bg-dark-mode-700 shrink-0 overflow-hidden relative">
         <Image src={avatar || '/images/avatar.png'} alt={name} layout="fill" />
       </div>
       <div>
-        <h3 className="font-semibold text-base text-dark-900 line-clamp-1">
+        <h3 className="font-semibold text-base text-dark-900 dark:text-white line-clamp-1">
           {name}
         </h3>
       </div>
@@ -21,7 +21,7 @@ const FriendRequestSent = ({ avatar, _id, name }: ChatBoxProps) => {
         <Button
           isLoading={cancel.isLoading}
           onClick={() => cancel.mutate()}
-          className="bg-dark-100 text-dark-900"
+          className="bg-dark-100 text-dark-900 dark:bg-dark-mode-700 dark:text-white"
         >
           Cancel
         </Button>

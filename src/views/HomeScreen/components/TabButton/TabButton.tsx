@@ -18,7 +18,9 @@ const TabButton = ({
       <a
         className={cx(
           'px-3 py-4 pb-5 grow flex justify-center rounded-lg cursor-pointer hover:bg-primary/5',
-          isActive ? 'text-primary' : 'hover:text-primary text-dark-700/70',
+          isActive
+            ? 'text-primary'
+            : 'hover:text-primary text-dark-700/70 dark:text-dark-mode-200',
         )}
       >
         <span className={cx(className)}>

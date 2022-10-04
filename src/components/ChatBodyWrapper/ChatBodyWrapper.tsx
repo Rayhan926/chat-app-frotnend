@@ -196,7 +196,7 @@ const ChatBodyWrapper = ({ children }: { children: ReactNode }) => {
         {...(router.pathname.startsWith('/chat') ? { ...getRootProps() } : {})}
         id="chat_body_wrapper"
         className={cx(
-          'w-full h-full sm:h-auto sm:w-[400px] sm:aspect-[3/5.5] relative sm:absolute sm:top-1/2 sm:left-1/2 sm:-translate-y-1/2 sm:-translate-x-1/2 bg-white sm:rounded-[30px] overflow-hidden',
+          'w-full h-full sm:h-auto sm:w-[400px] sm:aspect-[3/5.5] relative sm:absolute sm:top-1/2 sm:left-1/2 sm:-translate-y-1/2 sm:-translate-x-1/2 bg-white dark:bg-dark-mode-900 sm:rounded-[30px] overflow-hidden',
         )}
       >
         {router.pathname.startsWith('/chat') && (

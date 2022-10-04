@@ -21,7 +21,7 @@ const RequestTabs = ({ tabs }: RequestTabsProps) => {
                 'grow px-6 py-3 relative',
                 isActive
                   ? 'text-primary'
-                  : 'text-dark-700 hover:bg-primary/5 hover:text-primary',
+                  : 'text-dark-700 dark:text-dark-mode-300 hover:bg-primary/5 hover:text-primary',
               )}
             >
               {tab.title}

@@ -6,7 +6,11 @@ const NoData = ({ text }: { text?: string }) => {
       <div className="max-w-[75%]">
         <NoDataSvg />
       </div>
-      {text && <h3 className="text-dark-900/50 -translate-y-3">{text}</h3>}
+      {text && (
+        <h3 className="text-dark-900/50 dark:text-dark-mode-100 -translate-y-3">
+          {text}
+        </h3>
+      )}
     </div>
   );
 };

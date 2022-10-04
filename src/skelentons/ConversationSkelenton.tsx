@@ -9,7 +9,7 @@ const ConversationSkelenton = () => {
           width={12}
           height={12}
           circle
-          className="absolute bottom-0 right-0 border-2 border-white"
+          className="absolute bottom-0 right-0 border-2 border-white dark:border-dark-mode-900"
         />
       </div>
       <div>

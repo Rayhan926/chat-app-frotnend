@@ -146,6 +146,9 @@ export type MessageAttachmentsProps = Chat & {
 
 export type ListProps = {
   title: ReactNode;
+  subtitle?: ReactNode;
   icon: ReactNode;
-  value?: string;
+  value?: ReactNode;
 } & React.ComponentProps<'div'>;
+
+export type Theme = 'dark' | 'light' | null;

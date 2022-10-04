@@ -58,13 +58,13 @@ const SendFriendRequestDrawer = () => {
             ref={inputRef}
             value={usernameOrEmail}
             onChange={(e) => setUsernameOrEmail(e.target.value)}
-            className="w-full px-5 py-3 rounded-md outline-none bg-white text-dark-900"
+            className="w-full px-5 py-3 rounded-md outline-none bg-white dark:bg-dark-mode-700 dark:text-white text-dark-900"
             placeholder="Find by username, email"
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full px-5 py-3 rounded-md outline-none bg-white text-primary hover:bg-white/90"
+            className="w-full px-5 py-3 rounded-md outline-none bg-white dark:text-white text-primary hover:bg-white/90 dark:bg-primary"
           >
             {isLoading ? 'Sending request..' : 'Send'}
           </button>

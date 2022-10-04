@@ -14,7 +14,7 @@ const AttachmentsPreview = () => {
         {files.map((file, i) => (
           <div
             key={i}
-            className="bg-dark-100 rounded-md shrink-0 p-1 overflow-hidden relative"
+            className="bg-dark-100 dark:bg-dark-mode-700 rounded-md shrink-0 p-1 overflow-hidden relative"
           >
             <button
               onClick={() => removeFile(i)}
@@ -22,7 +22,7 @@ const AttachmentsPreview = () => {
             >
               <IoCloseSharp size={12} />
             </button>
-            <div className="w-[55px] bg-white aspect-square overflow-hidden flex items-center justify-center rounded [&>span]:!block">
+            <div className="w-[55px] bg-white dark:bg-dark-mode-600 aspect-square overflow-hidden flex items-center justify-center rounded [&>span]:!block">
               <Image
                 width={file.width}
                 height={file.height}

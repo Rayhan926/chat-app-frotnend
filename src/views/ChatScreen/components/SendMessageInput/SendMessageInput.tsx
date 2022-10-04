@@ -85,6 +85,7 @@ const SendMessageInput = () => {
   const handleSubmit = useCallback(
     (e?: React.FormEvent) => {
       e?.preventDefault();
+      messageInputRef.current?.focus();
 
       const trimmedMsg = message.trim();
       const hasMsgOrFiles = trimmedMsg || files.length > 0;
@@ -101,7 +102,6 @@ const SendMessageInput = () => {
       refresh();
       setTimeout(() => {
         setFieldValue('message', '');
-        messageInputRef.current?.focus();
       });
       scrollChatScreenToBottom();
 
@@ -151,7 +151,7 @@ const SendMessageInput = () => {
       <AttachmentsPreview />
       <form className="flex gap-1 items-end" onSubmit={handleSubmit}>
         {/** Input --Start-- */}
-        <div className="grow flex rounded-[25px] items-center bg-dark-100 min-h-11 relative">
+        <div className="grow flex rounded-[25px] items-center bg-dark-100 dark:bg-dark-mode-800 min-h-11 relative">
           <EmojiPicker />
           <TextareaAutosize
             // maxRows={4}
@@ -162,7 +162,7 @@ const SendMessageInput = () => {
             onChange={(e) => {
               setFieldValue('message', e.target.value);
             }}
-            className="w-full resize-none outline-none py-2.5 text-dark-900 placeholder:text-dark-700 bg-transparent"
+            className="w-full resize-none outline-none py-2.5 text-dark-900 dark:text-white placeholder:text-dark-700 dark:placeholder:text-dark-mode-100 bg-transparent"
           />
           <AttachmentsPicker />
         </div>

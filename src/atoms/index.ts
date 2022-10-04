@@ -5,6 +5,7 @@ import {
   Conversation,
   FileWithAdditionalFields,
   MessageInputType,
+  Theme,
   ToastAtomType,
   Typing,
   UploadOnProgress,
@@ -33,3 +34,5 @@ export const filesAtom = atom<FileWithAdditionalFields[]>([]);
 export const uploadOnProgeressAtom = atom<UploadOnProgress[]>([]);
 export const socketAtom = atom<Socket | null>(null);
 export const typingAtom = atom<Typing[]>([]);
+
+export const themeAtom = atom<Theme>(null);

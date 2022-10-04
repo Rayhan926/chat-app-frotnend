@@ -1,6 +1,7 @@
 import ChatBodyWrapper from '@components/ChatBodyWrapper';
 import ToastContainer from '@components/ToastContainer';
 import { AuthProvider } from '@hooks/useSession';
+import useTheme from '@hooks/useTheme';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AnimateSharedLayout } from 'framer-motion';
 import type { AppProps } from 'next/app';
@@ -22,6 +23,8 @@ const queryClient = new QueryClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { isDarkTheme } = useTheme();
+
   return (
     <QueryClientProvider client={queryClient}>
       <AnimateSharedLayout>
@@ -31,8 +34,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           <AuthProvider>
             {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             <SkeletonTheme
-              baseColor="#ddd"
-              highlightColor="#f1f1fe"
+              baseColor={isDarkTheme ? '#333' : '#ddd'}
+              highlightColor={isDarkTheme ? '#555' : '#f1f1fe'}
               borderRadius={2}
             >
               <ChatBodyWrapper>

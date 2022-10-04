@@ -10,12 +10,15 @@
     box-shadow: 0 0 20px theme(colors.primary / 30%);
   }
   .__emoji_btn {
-    @apply rounded-full w-11 shrink-0 aspect-square flex justify-center items-center self-end h-full text-dark-900/50 cursor-pointer;
+    @apply rounded-full w-11 shrink-0 aspect-square flex justify-center items-center self-end h-full text-dark-900/50 dark:text-dark-mode-200 cursor-pointer;
   }
 }
 
 body {
-  @apply bg-soft-gray;
+  @apply bg-soft-gray dark:bg-dark-mode-700 opacity-0 pointer-events-none;
+  transition-duration: 100ms;
+  transition-delay: 200ms;
+  transition-property: opacity;
 }
 
 .animate_slide_up {
@@ -154,7 +157,7 @@ em-emoji-picker {
 }
 
 .typing_dots_wrapper > span {
-  @apply w-[5px] h-[5px] rounded-full bg-dark-700 block;
+  @apply w-[5px] h-[5px] rounded-full bg-dark-700 dark:bg-dark-mode-300 block;
   animation: typingDot 1.8s ease-in-out infinite;
 }
 

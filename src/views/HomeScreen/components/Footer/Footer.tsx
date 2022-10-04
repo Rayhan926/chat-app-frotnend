@@ -22,7 +22,7 @@ const Footer = () => {
 
   return (
     <footer className="relative">
-      <div className="flex justify-between items-center bg-white border-t border-dark-100">
+      <div className="flex justify-between items-center border-t border-dark-100 dark:border-dark-mode-800">
         <TabButton
           icon={<IoChatbubblesOutline size={25} />}
           activeIcon={<IoChatbubblesSharp size={25} />}
