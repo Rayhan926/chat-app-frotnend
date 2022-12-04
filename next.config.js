@@ -6,7 +6,7 @@ const nextConfig = {
     domains: [
       'lh3.googleusercontent.com',
       'localhost',
-      'chat-app-node-express-backend.herokuapp.com',
+      'https://chat-app-backend-production-747d.up.railway.app',
     ],
   },
 };

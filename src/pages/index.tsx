@@ -13,3 +13,13 @@ const Home = () => {
 };
 
 export default Home;
+
+/**
+ *Fixes
+
+ Send friend request focus issue.
+ Chat header last see text
+ Chat auto scroll to bottom not working on mobile
+ Auto scroll to bottom on focus send message textarea on mobile
+ *
+ */
